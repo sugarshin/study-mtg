@@ -44,16 +44,9 @@ Asset Pipeline という仕組みを使って CoffeeScript を自動的にコン
 
 ### インストール
 
-**※Rails3.1~ デフォルトでインストールされる**
-
 #### Node.js, npm
 
-* インストーラー [http://nodejs.org/](http://nodejs.org/)
-* Homebrew
-
-```shell
-brew install node
-```
+[https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
 
 * nodebrew [https://github.com/hokaccha/nodebrew](https://github.com/hokaccha/nodebrew)
 

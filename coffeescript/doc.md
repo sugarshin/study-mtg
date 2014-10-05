@@ -17,7 +17,7 @@ JavaScript に比べて読みやすい、書きやすい、タイプ量が少な
 
 **JavaScript**
 
-```javascript
+```js
 var add = function(x, y) {
   return x + y;
 };

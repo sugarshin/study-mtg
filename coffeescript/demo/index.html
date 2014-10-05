@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .g-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0,0,0,.5);
+    }
+
+    .g-nav ul {
+      overflow: hidden;
+      list-style: none;
+      text-align: center;
+    }
+
+    .g-nav li {
+      float: left;
+      width: 25%;
+    }
+
+    .g-nav a {
+      display: block;
+      color: #FFF;
+      line-height: 64px;
+    }
+
+    .g-nav a:hover,
+    .g-nav a.active {
+      background: rgba(0,0,0,.5);
+    }
+
+    section {
+      padding-top: 64px;
+      height: 1000px;
+      border-bottom: 4px solid rgba(0,0,0,.5);
+    }
+  </style>
+</head>
+<body>
+  <nav class="g-nav" id="gNav">
+    <ul>
+      <li>
+        <a href="#first">First</a>
+      </li>
+      <li>
+        <a href="#second">Second</a>
+      </li>
+      <li>
+        <a href="#third">Third</a>
+      </li>
+      <li>
+        <a href="#fourth">Fourth</a>
+      </li>
+    </ul>
+  </nav>
+
+  <section id="first">
+    <h1>First</h1>
+  </section>
+
+  <section id="second">
+    <h1>Second</h1>
+  </section>
+
+  <section id="third">
+    <h1>Third</h1>
+  </section>
+
+  <section id="fourth">
+    <h1>Fourth</h1>
+  </section>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

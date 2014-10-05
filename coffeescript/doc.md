@@ -29,16 +29,34 @@ var add = function(x, y) {
 add = (x, y) -> x + y
 ```
 
+`class` 構文が使える
+
+```coffeescript
+class Animal
+```
+
+**JavaScript**
+
+```js
+var Animal;
+
+Animal = (function() {
+  function Animal() {}
+
+  return Animal;
+
+})();
+```
+
+拡張子は `.coffee`
+
 `.coffee` ファイルをコンパイルすることで `.js` ファイルが生成されます
 
-コンパイルされた JavaScript は人間にも読みやすいきれいなコード
+**コンパイルされた JavaScript は人間にも読みやすいきれいなコード**
 
 Node.js での採用率1位
 
-
 Ruby on Rails で標準サポート
-
-Asset Pipeline という仕組みを使って CoffeeScript を自動的にコンパイル
 
 ## 環境準備
 
@@ -69,7 +87,11 @@ npm -v
 
 ```shell
 npm i coffee-script -g
+
+coffee -v
+CoffeeScript version 1.8.0
 ```
+
 
 
 ## 文法
@@ -120,6 +142,22 @@ add = (x = 2, y = 4) ->
   x + y
 ```
 
+可変長引数
+
+```coffeescript
+func = (arg1, arg2, args...) ->
+  alert arg1 # -> 1
+  alert arg2 # -> 2
+  alert args # -> 3, 4, 5
+  return
+
+a = [
+  1, 2, 3, 4, 5
+]
+
+func a...
+```
+
 #### 実行時
 
 `()` は省略可能（曖昧性がない場合）
@@ -138,6 +176,20 @@ jQuery
 $ '#id'
   .css 'color', '#ff0'
 ```
+
+## 制御構文
+
+```coffeescript
+if hoge
+  console.log hoge
+else
+  console.log fuga
+```
+
+```coffeescript
+if hoge then console.log hoge
+```
+
 
 
 

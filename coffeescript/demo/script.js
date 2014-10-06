@@ -3,25 +3,29 @@
   var ActiveNav, SmoothScroll;
 
   ActiveNav = (function() {
-    var $window, defaults, _doActive, _eventify, _prepare;
+    var $window, defaults, _doActive, _init, _prepareTarget;
 
     $window = $(window);
 
-    _prepare = function() {
-      var el, i, _i, _len, _ref;
+    _prepareTarget = function() {
+      var a, i, _i, _len, _ref;
       this.targetOffset = [];
       _ref = this.$el.find('a');
       for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-        el = _ref[i];
-        this.targetOffset[i] = $($(el).attr('href')).offset().top;
+        a = _ref[i];
+        this.targetOffset[i] = $(a.getAttribute('href')).offset().top;
       }
+    };
+
+    _init = function() {
+      return _doActive.call(this);
     };
 
     _doActive = function() {
       var scrollTop;
       scrollTop = $window.scrollTop();
       this.$el.find('a').removeClass(this.options.className);
-      if ((0 <= scrollTop && scrollTop < this.targetOffset[1])) {
+      if (scrollTop < this.targetOffset[1]) {
         this.$el.find('a').eq(0).addClass(this.options.className);
       } else if ((this.targetOffset[1] <= scrollTop && scrollTop < this.targetOffset[2])) {
         this.$el.find('a').eq(1).addClass(this.options.className);
@@ -32,14 +36,6 @@
       }
     };
 
-    _eventify = function() {
-      var _this;
-      _this = this;
-      return $window.on('scroll.activeNav', function() {
-        _doActive.call(_this);
-      });
-    };
-
     defaults = {
       className: 'active'
     };
@@ -47,8 +43,9 @@
     function ActiveNav($el, options) {
       this.$el = $el;
       this.options = $.extend({}, defaults, options);
-      _prepare.call(this);
-      _eventify.call(this);
+      _prepareTarget.call(this);
+      _init.call(this);
+      this.addEvent();
     }
 
     ActiveNav.prototype.addEvent = function() {
@@ -83,14 +80,11 @@
   $('#gNav').activeNav();
 
   SmoothScroll = (function() {
-    $.easing.easeOutExpo = function (x, t, b, c, d) {
-    return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
-  };
     var defaults, _eventify, _prepareTarget;
 
     defaults = {
       speed: 500,
-      fx: 'easeOutExpo',
+      fx: 'swing',
       onScrollBefore: null,
       onScrollAfter: null
     };
@@ -104,7 +98,7 @@
     _eventify = function() {
       var _this;
       _this = this;
-      this.$el.on('click', function(ev) {
+      this.$el.on('click.smoothScroll', function(ev) {
         ev.preventDefault();
         _this.doScroll(this);
       });
@@ -152,8 +146,13 @@
     });
   };
 
+  $.easing.easeOutExpo = function (x, t, b, c, d) {
+  return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
+};
+
   $('a[href^="#"]').smoothScroll({
     speed: 1000,
+    fx: 'easeOutExpo',
     onScrollBefore: function(el) {
       var activeNav;
       $('#gNav').find('a').removeClass('active');

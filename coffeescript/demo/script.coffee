@@ -2,18 +2,21 @@ class ActiveNav
 
   $window = $(window)
 
-  _prepare = ->
+  _prepareTarget = ->
     @targetOffset = []
-    for el, i in @$el.find('a')
-      @targetOffset[i] = $($(el).attr('href')).offset().top
+    for a, i in @$el.find('a')
+      @targetOffset[i] = $(a.getAttribute('href')).offset().top
     return
+
+  _init = ->
+    _doActive.call @
 
   _doActive = ->
     scrollTop = $window.scrollTop()
 
     @$el.find('a').removeClass @options.className
 
-    if 0 <= scrollTop < @targetOffset[1]
+    if scrollTop < @targetOffset[1]
       @$el.find('a').eq(0).addClass @options.className
 
     else if @targetOffset[1] <= scrollTop < @targetOffset[2]
@@ -27,12 +30,6 @@ class ActiveNav
 
     return
 
-  _eventify = ->
-    _this = @
-    $window.on 'scroll.activeNav', ->
-      _doActive.call _this
-      return
-
   defaults =
     className: 'active'
 
@@ -40,8 +37,10 @@ class ActiveNav
     @$el = $el
     @options = $.extend {}, defaults, options
 
-    _prepare.call @
-    _eventify.call @
+    _prepareTarget.call @
+    _init.call @
+
+    @addEvent()
 
   addEvent: ->
     _this = @
@@ -75,14 +74,9 @@ $('#gNav').activeNav()
 
 class SmoothScroll
 
-  # jQuery easing
-  `$.easing.easeOutExpo = function (x, t, b, c, d) {
-    return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
-  }`
-
   defaults =
     speed: 500
-    fx: 'easeOutExpo'
+    fx: 'swing'
     onScrollBefore: null
     onScrollAfter: null
 
@@ -93,14 +87,13 @@ class SmoothScroll
 
   _eventify = ->
     _this = @
-    @$el.on 'click', (ev) ->
+    @$el.on 'click.smoothScroll', (ev) ->
       ev.preventDefault()
       _this.doScroll this
       return
     return
 
   constructor: ($el, options) ->
-
     @options = $.extend {}, defaults, options
     @$el = $el
 
@@ -141,8 +134,13 @@ $.fn.smoothScroll = (options) ->
       $el.data 'smoothScroll', smoothScroll
     return
 
+`$.easing.easeOutExpo = function (x, t, b, c, d) {
+  return (t==d) ? b+c : c * (-Math.pow(2, -10 * t/d) + 1) + b;
+}`
+
 $('a[href^="#"]').smoothScroll(
   speed: 1000
+  fx: 'easeOutExpo'
   onScrollBefore: (el) ->
     $('#gNav').find('a').removeClass 'active'
     activeNav = $('#gNav').data 'activeNav'

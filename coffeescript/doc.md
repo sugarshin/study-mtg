@@ -60,6 +60,8 @@ Ruby on Rails で標準サポート
 
 ## 環境準備
 
+[Try CoffeeScript](http://coffeescript.org/#try:)
+
 ### インストール
 
 #### Node.js, npm

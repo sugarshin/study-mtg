@@ -18,7 +18,7 @@
     };
 
     _init = function() {
-      return _doActive.call(this);
+      _doActive.call(this);
     };
 
     _doActive = function() {

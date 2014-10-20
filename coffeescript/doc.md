@@ -11,7 +11,9 @@
 
 [http://coffeescript.org/](http://coffeescript.org/)
 
-Ruby, Python, Haskell から影響を受けた JavaScript の**シンタックスシュガー**
+Ruby, Python, Haskell から影響を受けた JavaScript の**シンタックスシュガー** (AltJS)
+
+他に [TypeScript](//www.typescriptlang.org/) や [Haxe](//haxe.org/) も有名
 
 JavaScript に比べて読みやすい、書きやすい、タイプ量が少ない
 
@@ -28,29 +30,6 @@ var add = function(x, y) {
 ```coffeescript
 add = (x, y) -> x + y
 ```
-
-`class` 構文が使える
-
-```coffeescript
-class Animal
-```
-
-**JavaScript**
-
-```js
-var Animal;
-
-Animal = (function() {
-  function Animal() {}
-
-  return Animal;
-
-})();
-```
-
-拡張子は `.coffee`
-
-`.coffee` ファイルをコンパイルすることで `.js` ファイルが生成されます
 
 **コンパイルされた JavaScript は人間にも読みやすいきれいなコード**
 
@@ -192,6 +171,92 @@ else
 if hoge then console.log hoge
 ```
 
+```coffeescript
+len = 8
+
+for i in [0...len]
+  console.log i
+```
+
+```coffeescript
+len = 8
+
+for i in [0..len]
+  console.log i
+```
+
+
+```coffeescript
+arr = [1, 3, 4, 6, 7]
+
+for num, index in arr
+  console.log num
+  console.log index
+```
+
+
+```coffeescript
+obj =
+  name: 'sato'
+  age: 30
+  sex: male
+
+for val, key in obj
+  console.log key
+  console.log val
+```
+
+```coffeescript
+obj =
+  name: 'sato'
+  age: 30
+  sex: male
+
+for key of obj
+  console.log key
+```
+
+### 三項演算子
+
+```coffeescript
+sum = if x? then x else y
+```
+
+
+## `class` 構文
+
+```coffeescript
+class Animal
+```
+
+```js
+var Animal;
+
+Animal = (function() {
+  function Animal() {}
+
+  return Animal;
+
+})();
+```
+
+## `=>`
+
+`this` の束縛
+
+`this` は常に現在のインスタンスになる
+
+```coffeescript
+class Person
+  message: 'Hello'
+
+  say: =>
+    alert @message
+
+person = new Person
+$('#say').click person.say
+
+```
 
 
 
@@ -211,14 +276,13 @@ if hoge then console.log hoge
 * 簡潔な関数
 * thisのバインド
 * 文字列埋め込み + ヒアドキュメント
-* イテレーション
 * 配列内包
 * プロパティの存在チェック
+
+### デメリット
 
 * JS の理解が必要
 * コンパイル作業の手間
 
 
 [CoffeeScriptのメリット・デメリット](http://matome.naver.jp/odai/2133344529212410501)
-
-**altJS** は他に [TypeScript](//www.typescriptlang.org/) や [Haxe](//haxe.org/) が有名

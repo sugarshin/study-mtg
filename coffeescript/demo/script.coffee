@@ -10,6 +10,7 @@ class ActiveNav
 
   _init = ->
     _doActive.call @
+    return
 
   _doActive = ->
     scrollTop = $window.scrollTop()

@@ -196,7 +196,7 @@ for num, index in arr
 obj =
   name: 'sato'
   age: 30
-  sex: male
+  sex: 'male'
 
 for val, key in obj
   console.log key
@@ -207,7 +207,7 @@ for val, key in obj
 obj =
   name: 'sato'
   age: 30
-  sex: male
+  sex: 'male'
 
 for key of obj
   console.log key
@@ -255,17 +255,68 @@ Animal = (function() {
 ```
 
 ```coffeescript
-class Animal
-  @defaults =
-    type: 
+class Rollover
+
+  defaults =
+    offStr: '_off'
+    onStr: '_on'
+
+  _prepareSrcs = ->
+    opt = @options
+
+    @srcOff = @$img.attr 'src'
+    @srcOn = @srcOff.replace opt.offStr, opt.onStr
+
+  _preload = ->
+    $('<img />').attr 'src', @srcOn
+
+
+
+  constructor: ($el, options) ->
+
+    @options = $.extend {}, defaults, options
+    @$el = $el
+
+    @$img = $el.find 'img'
+
+    _prepareSrcs.call @
+    _preload.call @
+    @eventify()
+
+  toOver: ->
+    @$img.attr 'src', @srcOn
+    return @
+
+  toNormal: ->
+    @$img.attr 'src', @srcOff
+    return @
+
+  eventify: ->
+    _this = @
+    @$el.on 'mouseenter.rollover', ->
+      _this.toOver()
+      return
+    @$el.on 'mouseleave.rollover', ->
+      _this.toNormal()
+      return
+    return @
+
+  removeEvent: ->
+    @$el.off 'mouseenter.rollover'
+    @$el.off 'mouseleave.rollover'
+    return @
+
+  destroy: ->
+    @$el.remove()
+    delete @
 ```
 
 
-## `=>`
+## `=>` (ファットアロー)
 
 `this` の束縛
 
-`this` は常に現在のインスタンスになる
+`this` が常に現在のインスタンスになる
 
 ```coffeescript
 class Person
@@ -280,7 +331,17 @@ $('#say').click person.say
 ```
 
 
+## `` ` ` `` (バックティック)
 
+素の JavaScript も書ける
+
+```coffeescript
+`var add = function(x, y) {
+  return x + y;
+};`
+
+add 3, 4
+```
 
 ## メリット・デメリット
 

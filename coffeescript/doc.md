@@ -47,16 +47,7 @@ Ruby on Rails で標準サポート
 
 [https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
 
-* nodebrew [https://github.com/hokaccha/nodebrew](https://github.com/hokaccha/nodebrew)
-
 ```shell
-brew install nodebrew
-
-nodebrew install-binary <version>
-nodebrew use <version>
-```
-
-```
 node -v
 v0.10.31
 
@@ -73,6 +64,12 @@ coffee -v
 CoffeeScript version 1.8.0
 ```
 
+```shell
+coffee -c -w script.coffee
+```
+
+* [Grunt](http://gruntjs.com/)
+* [gulp.js](http://gulpjs.com/)
 
 
 ## 文法
@@ -222,6 +219,23 @@ for key of obj
 sum = if x? then x else y
 ```
 
+## オブジェクト、配列
+
+```coffeescript
+obj =
+  name: 'sato'
+  age: 30
+  sex: 'male'
+
+arr = [
+  'name1'
+  'name2'
+  'name3'
+  'name4'
+]
+
+```
+
 
 ## `class` 構文
 
@@ -239,6 +253,13 @@ Animal = (function() {
 
 })();
 ```
+
+```coffeescript
+class Animal
+  @defaults =
+    type: 
+```
+
 
 ## `=>`
 

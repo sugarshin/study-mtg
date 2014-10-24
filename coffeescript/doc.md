@@ -4,14 +4,14 @@
 
 1. 概要
 2. 環境準備
-3. 基本文法
+3. 基本文法（さわってみる）
 4. メリット・デメリット
 
 ## 概要
 
 [http://coffeescript.org/](http://coffeescript.org/)
 
-Ruby, Python, Haskell から影響を受けた JavaScript の**シンタックスシュガー** (AltJS)
+Ruby, Python, Haskell から影響を受けた言語 （**シンタックスシュガー** **AltJS**）
 
 他に [TypeScript](//www.typescriptlang.org/) や [Haxe](//haxe.org/) も有名
 
@@ -64,9 +64,17 @@ coffee -v
 CoffeeScript version 1.8.0
 ```
 
+#### コンパイル
+
+```shell
+coffee -c script.coffee
+```
+
 ```shell
 coffee -c -w script.coffee
 ```
+
+[http://coffeescript.org/#usage](http://coffeescript.org/#usage)
 
 * [Grunt](http://gruntjs.com/)
 * [gulp.js](http://gulpjs.com/)
@@ -94,6 +102,24 @@ coffee -c -w script.coffee
 hoge = '変数'
 ```
 
+### 文字列、ヒアドキュメント
+
+```coffeescript
+html = '''
+       <div>
+         <h1>title</h1>
+       </div>
+       '''
+```
+
+`"` (ダブルクオート) で式展開
+
+```coffeescript
+name = 'sato'
+
+say = "Hello #{name}"
+```
+
 ### 関数
 
 `function` が `->`
@@ -109,15 +135,13 @@ func = -> 'hoge'
 ```
 
 ```coffeescript
-add = (x, y) ->
-  x + y
+add = (x, y) -> x + y
 ```
 
 引数にはデフォルト値をとれる
 
 ```coffeescript
-add = (x = 2, y = 4) ->
-  x + y
+add = (x = 2, y = 4) -> x + y
 ```
 
 可変長引数
@@ -127,7 +151,6 @@ func = (arg1, arg2, args...) ->
   alert arg1 # -> 1
   alert arg2 # -> 2
   alert args # -> 3, 4, 5
-  return
 
 a = [
   1, 2, 3, 4, 5
@@ -157,6 +180,7 @@ $ '#id'
 
 ## 制御構文
 
+`if` 文
 ```coffeescript
 if hoge
   console.log hoge
@@ -164,9 +188,25 @@ else
   console.log fuga
 ```
 
+後置 `if`
+```coffeescript
+console.log hoge if hoge
+```
+
+`unless` 文
+
+```coffeescript
+unless hoge
+  console.log hoge
+```
+
+一行で
+
 ```coffeescript
 if hoge then console.log hoge
 ```
+
+`for`
 
 ```coffeescript
 len = 8
@@ -219,6 +259,33 @@ for key of obj
 sum = if x? then x else y
 ```
 
+### 演算子
+
+CoffeeScript   | JavaScript
+------------   | ----------
+is             | ===
+isnt           | !==
+not            | !
+and            | &&
+or             | &#124;&#124;
+true, yes, on  | true
+false, no, off | false
+@, this        | this
+of             | in
+
+### 存在演算子
+
+`?`
+
+```coffeescript
+sato = true if sato? and not female and age is 30
+
+speed = 0
+speed ?= 60
+
+func?()
+```
+
 ## オブジェクト、配列
 
 ```coffeescript
@@ -257,7 +324,7 @@ Animal = (function() {
 ```coffeescript
 class Rollover
 
-  defaults =
+  @defaults =
     offStr: '_off'
     onStr: '_on'
 
@@ -267,15 +334,14 @@ class Rollover
     @srcOff = @$img.attr 'src'
     @srcOn = @srcOff.replace opt.offStr, opt.onStr
 
-  _preload = ->
-    $('<img />').attr 'src', @srcOn
+  _preload = -> $('<img />').attr 'src', @srcOn
 
 
 
-  constructor: ($el, options) ->
-
-    @options = $.extend {}, defaults, options
-    @$el = $el
+  constructor: (el, options) ->
+    @options = $.extend {}, Rollover.defaults, options
+    @el = el
+    @$el = $(el)
 
     @$img = $el.find 'img'
 
@@ -293,15 +359,11 @@ class Rollover
 
   eventify: ->
     _this = @
-    @$el.on 'mouseenter.rollover', ->
-      _this.toOver()
-      return
-    @$el.on 'mouseleave.rollover', ->
-      _this.toNormal()
-      return
+    @$el.on 'mouseenter.rollover', -> _this.toOver()
+    @$el.on 'mouseleave.rollover', -> _this.toNormal()
     return @
 
-  removeEvent: ->
+  rmEvent: ->
     @$el.off 'mouseenter.rollover'
     @$el.off 'mouseleave.rollover'
     return @
@@ -322,12 +384,10 @@ class Rollover
 class Person
   message: 'Hello'
 
-  say: =>
-    alert @message
+  say: => alert @message
 
 person = new Person
 $('#say').click person.say
-
 ```
 
 
@@ -348,17 +408,16 @@ add 3, 4
 ### 問題点
 
 * 読みづらい >> 慣れ
-* デバッグが難しい >> ソースマップサポートされている
+* デバッグが難しい >> ソースマップがサポートされている
 * JS の理解が必要 >> そうでもない
 * 将来の保証がない >> Node.js で採用率高　Ruby on Rails で標準サポート
 
 ### メリット
 
 * 小さな機能をまとめやすい
-* 簡潔な関数
+* 簡潔な関数構文
 * thisのバインド
-* 文字列埋め込み + ヒアドキュメント
-* 配列内包
+* ヒアドキュメント、式展開
 * プロパティの存在チェック
 
 ### デメリット

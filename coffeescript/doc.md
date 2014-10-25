@@ -11,9 +11,18 @@
 
 [http://coffeescript.org/](http://coffeescript.org/)
 
-Ruby, Python, Haskell から影響を受けた言語 （**シンタックスシュガー** **AltJS**）
+Ruby, Python, Haskell から影響を受けた JavaScript 互換言語 （**シンタックスシュガー** **AltJS**）
 
-他に [TypeScript](//www.typescriptlang.org/) や [Haxe](//haxe.org/) も有名
+AltJS は他に [TypeScript](//www.typescriptlang.org/) や [Haxe](//haxe.org/)
+、[JSX](http://jsx.github.io/) 、 [Dart](https://www.dartlang.org/) も有名
+
+> AltJS の種類
+> 
+> * 単純に JavaScript のシンタックスシュガーと> いう位置付けの言語 (CoffeeScript)
+> * 完全に別言語なクライアントサイド言語 (Dart)
+> * 言語として独自の機能は有するが最終的には JavaScript に変換する言語 (TypeScript, Haxe, JSX)
+
+次期 JavaScript （ECMAScript 6） 策定に大きく影響あたえている言語
 
 JavaScript に比べて読みやすい、書きやすい、タイプ量が少ない
 

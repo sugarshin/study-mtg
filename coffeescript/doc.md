@@ -18,11 +18,13 @@ AltJS は他に [TypeScript](//www.typescriptlang.org/) や [Haxe](//haxe.org/)
 
 > AltJS の種類
 > 
-> * 単純に JavaScript のシンタックスシュガーと> いう位置付けの言語 (CoffeeScript)
+> * 単純に JavaScript のシンタックスシュガーという位置付けの言語 (CoffeeScript)
 > * 完全に別言語なクライアントサイド言語 (Dart)
 > * 言語として独自の機能は有するが最終的には JavaScript に変換する言語 (TypeScript, Haxe, JSX)
 
-次期 JavaScript （ECMAScript 6） 策定に大きく影響あたえている言語
+---
+
+現在策定中の次期 JavaScript （ECMAScript 6） の元になっている
 
 JavaScript に比べて読みやすい、書きやすい、タイプ量が少ない
 
@@ -40,7 +42,7 @@ var add = function(x, y) {
 add = (x, y) -> x + y
 ```
 
-**コンパイルされた JavaScript は人間にも読みやすいきれいなコード**
+**コンパイルされた JavaScript は人間にも読みやすいきれいなコード、かつベストプラクティスなコード**
 
 Node.js での採用率1位
 
@@ -127,6 +129,23 @@ html = '''
 name = 'sato'
 
 say = "Hello #{name}"
+```
+
+## オブジェクト、配列
+
+```coffeescript
+obj =
+  name: 'sato'
+  age: 30
+  sex: 'male'
+
+arr = [
+  'name1'
+  'name2'
+  'name3'
+  'name4'
+]
+
 ```
 
 ### 関数
@@ -231,7 +250,6 @@ for i in [0..len]
   console.log i
 ```
 
-
 ```coffeescript
 arr = [1, 3, 4, 6, 7]
 
@@ -295,24 +313,6 @@ speed ?= 60
 func?()
 ```
 
-## オブジェクト、配列
-
-```coffeescript
-obj =
-  name: 'sato'
-  age: 30
-  sex: 'male'
-
-arr = [
-  'name1'
-  'name2'
-  'name3'
-  'name4'
-]
-
-```
-
-
 ## `class` 構文
 
 ```coffeescript
@@ -367,9 +367,8 @@ class Rollover
     return @
 
   eventify: ->
-    _this = @
-    @$el.on 'mouseenter.rollover', -> _this.toOver()
-    @$el.on 'mouseleave.rollover', -> _this.toNormal()
+    @$el.on 'mouseenter.rollover', => @toOver()
+    @$el.on 'mouseleave.rollover', => @toNormal()
     return @
 
   rmEvent: ->

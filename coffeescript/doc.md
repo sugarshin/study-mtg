@@ -333,10 +333,12 @@ Animal = (function() {
 ```coffeescript
 class Rollover
 
+  # クラス変数
   @defaults =
     offStr: '_off'
     onStr: '_on'
 
+  # プライベート関数
   _prepareSrcs = ->
     opt = @options
 
@@ -347,17 +349,19 @@ class Rollover
 
 
 
+  # コンストラクタ関数
   constructor: (el, options) ->
     @options = $.extend {}, Rollover.defaults, options
     @el = el
     @$el = $(el)
-
     @$img = $el.find 'img'
 
     _prepareSrcs.call @
     _preload.call @
     @eventify()
 
+
+  # パブリックメソッド（prototypeメソッド）
   toOver: ->
     @$img.attr 'src', @srcOn
     return @

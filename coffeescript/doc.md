@@ -11,7 +11,7 @@
 
 [http://coffeescript.org/](http://coffeescript.org/)
 
-Ruby, Python, Haskell から影響を受けた JavaScript 互換言語 （**シンタックスシュガー** **AltJS**）
+JavaScript のトランスレータ（**シンタックスシュガー**、 **AltJS**）
 
 AltJS は他に [TypeScript](//www.typescriptlang.org/) や [Haxe](//haxe.org/)
 、[JSX](http://jsx.github.io/) 、 [Dart](https://www.dartlang.org/) も有名
@@ -24,9 +24,7 @@ AltJS は他に [TypeScript](//www.typescriptlang.org/) や [Haxe](//haxe.org/)
 
 ---
 
-現在策定中の次期 JavaScript （ECMAScript 6） の元になっている
-
-JavaScript に比べて読みやすい、書きやすい、タイプ量が少ない
+Ruby, Python などに影響を受けた簡易な文法
 
 **JavaScript**
 
@@ -42,15 +40,17 @@ var add = function(x, y) {
 add = (x, y) -> x + y
 ```
 
-**コンパイルされた JavaScript は人間にも読みやすいきれいなコード、かつベストプラクティスなコード**
+**コンパイルされた JavaScript は人間にも読みやすいきれいなコードでベストプラクティスなコード**
 
-Node.js での採用率1位
+現在策定中の次期 JavaScript （ECMAScript 6） の元になっている
+
+Node.js での採用率が高い
 
 Ruby on Rails で標準サポート
 
-## 環境準備
+GitHub で採用されている
 
-[Try CoffeeScript](http://coffeescript.org/#try:)
+## 環境準備
 
 ### インストール
 
@@ -75,7 +75,7 @@ coffee -v
 CoffeeScript version 1.8.0
 ```
 
-#### コンパイル
+### コンパイル
 
 ```shell
 coffee -c script.coffee
@@ -90,6 +90,7 @@ coffee -c -w script.coffee
 * [Grunt](http://gruntjs.com/)
 * [gulp.js](http://gulpjs.com/)
 
+[Try CoffeeScript](http://coffeescript.org/#try:)
 
 ## 文法
 
@@ -187,7 +188,7 @@ a = [
 func a...
 ```
 
-#### 実行時
+#### 呼び出し
 
 `()` は省略可能（曖昧性がない場合）
 
@@ -234,6 +235,13 @@ unless hoge
 if hoge then console.log hoge
 ```
 
+連結
+
+```coffeescript
+if 0 < 3 < 6
+  console.log true
+```
+
 `for`
 
 ```coffeescript
@@ -257,7 +265,6 @@ for num, index in arr
   console.log num
   console.log index
 ```
-
 
 ```coffeescript
 obj =
@@ -364,21 +371,21 @@ class Rollover
   # パブリックメソッド（prototypeメソッド）
   toOver: ->
     @$img.attr 'src', @srcOn
-    return @
+    return this
 
   toNormal: ->
     @$img.attr 'src', @srcOff
-    return @
+    return this
 
   eventify: ->
     @$el.on 'mouseenter.rollover', => @toOver()
     @$el.on 'mouseleave.rollover', => @toNormal()
-    return @
+    return this
 
   rmEvent: ->
     @$el.off 'mouseenter.rollover'
     @$el.off 'mouseleave.rollover'
-    return @
+    return this
 
   destroy: ->
     @$el.remove()
@@ -421,18 +428,20 @@ add 3, 4
 
 * 読みづらい >> 慣れ
 * デバッグが難しい >> ソースマップがサポートされている
-* JS の理解が必要 >> そうでもない
+* JavaScript の理解が必要 >> そうでもない
 * 将来の保証がない >> Node.js で採用率高、Ruby on Rails で標準サポート、実際に ES6 の元になった
+
+---
 
 ### メリット
 
-* 小さな機能をまとめやすい
-* 断然書きやすいし、見通しも良い
+* 記述量が大幅に減る 半分から1/3 
+* 実績があり、良い意味で枯れている (2009~)
+* JavaScript からの移行コストが低い
+* オブジェクト指向と相性が良い
+* 生成コードが綺麗で読みやすく、良いコード
 
 ### デメリット
 
-* JS の理解が必要
 * コンパイル作業の手間
-
-
-[CoffeeScriptのメリット・デメリット](http://matome.naver.jp/odai/2133344529212410501)
+* JavaScript の理解が必要

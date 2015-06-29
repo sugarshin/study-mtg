@@ -4,7 +4,7 @@
 
 1. 概要
 2. 環境準備
-3. 機能
+3. 文法や機能
 4. メリット・デメリット
 
 ## 概要
@@ -38,11 +38,15 @@ ES6, ES7 で書かれたファイルを ES5 に変換
   * Google 製
   * ランタイムエンジンも配布してるのでアクセス時変換可
 
+#### ES6, 7 の各ブラウザやトランスパイラの対応状況
+
+http://kangax.github.io/compat-table/es6/
+
 ## 環境準備
 
 ### REPL
 
-ブラウザで試せます
+Babel はブラウザで試せます
 
 https://babeljs.io/repl/
 
@@ -65,16 +69,16 @@ https://github.com/babel/babel
 3. npm i
 4. npm start
 5. main.babel.js を編集
-6. 監視コンパイル
+6. 監視トランスパイル => main.js
 
-## 機能
+## 文法や機能
 
 参考：
 
 https://babeljs.io/docs/learn-es2015/
 https://github.com/lukehoban/es6features#readme
 
-### Arrow Function
+### アロー関数
 
 ```js
 var multi = (num) => {
@@ -98,41 +102,143 @@ var multi = (num = 2) => {
 };
 ```
 
-this の束縛
+this の制御
 
 ```js
 class Button {
   constructor(el) {
     this.el = el;
-    this.addClickListener();
+    this.el.addEventListener('click', () => {
+      this.show();
+    });
   }
 
-  addClickListener(callback) {
-    this.el.addEventListener('click', callback);
-  }
-
-  rmClickListener(callback) {
-    this.el.removeEventListener('click', callback);
+  show() {
+    console.log(this.el.textContent);
   }
 }
 
-var person = {
-  name: 'sato',
-  show: function() {
-    return this.name;
+var el = document.querySelector('.button');
+new Button(el);
+```
+
+### クラス
+
+```js
+class SkinnedMesh extends THREE.Mesh {
+
+  constructor(geometry, materials) {
+    super(geometry, materials); // 親クラスのコンストラクタ関数を実行
+
+    this.idMatrix = SkinnedMesh.defaultMatrix();
+    this.bones = [];
+    this.boneMatrices = [];
+    //...
   }
+
+  update(camera) {
+    //...
+    super.update(); // 親クラスのメソッドを実行
+  }
+
+  static defaultMatrix() { // スタティックメソッド（クラスメソッド）
+    return new THREE.Matrix4();
+  }
+
+}
+```
+
+### オブジェクトリテラルの機能強化
+
+```js
+var obj = {
+  // __proto__ を明示的に宣言可
+  __proto__: theProtoObj,
+
+  // handler: handler, のショートハンド
+  handler,
+
+  // メソッド
+  toString() {
+    // 親クラス（prototype を辿って最初に発見されたオブジェクト）のメソッドを参照、実行可
+    return "d " + super.toString();
+  },
+
+  // オブジェクト定義時に動的にプロパティ名を指定可
+  // これまで => var o = {}; o['prop' + (function() {return 1;})()] = 'value';
+  [ "prop_" + (() => 42)() ]: 42
+};
+```
+
+### Template Strings
+
+ヒアドキュメント、変数展開など
+
+[ここ](http://js-next.hatenablog.com/entry/2014/11/22/042055)が詳しい
+
+```js
+var str1 = `あいうえお
+かきくけこ`；
+
+var str2 = 'あいうえお\nかきくけこ'；
+
+str1 === str2; // true
+
+var arg = 'hello';
+var msg = `${arg} sato!`;
+```
+
+### 分割代入
+
+http://js-next.hatenablog.com/entry/2015/05/18/181956
+
+```js
+var [a, , b] = [1, 2, 3];
+// a => 1, b => 3
+
+var o = {
+  a: 1,
+  b: 2
 };
 
-var el = document.querySelector('.el');
-el.addEventListener('click', ev => {});
+var { a, b } = o;
+// a => 1, b => 2
+
+import React, { Componet, PropTypes } from 'react';
 ```
+
+### import, export
+
+```js
+import $ from 'jquery';
+
+import 'whatwg-fetch'; // 代入が必要ない場合
+
+import { EventEmitter } from 'events';
+
+
+
+export default funtion add(x, y) {
+  return x + y;
+}
+
+export default class Sub extends Super {
+
+}
+
+export const PI = 3.14;
+```
+
+などなど
 
 ## メリット・デメリット
 
-### 問題点
+Babel でも Traceur compiler でも、ES5 なので、IE8 以下もサポートの場合は対応が必要（[es5-shim](https://github.com/es-shims/es5-shim) とか）
 
 ### メリット
 
-### デメリット
+* 貧弱だった言語機能が強化
+* AltJSなどで実現してきたものが組み込まれた
+* 標準仕様なので信頼性、将来性は保証されている
 
-http://kangax.github.io/compat-table/es5/
+### デメリット

@@ -1,0 +1,10 @@
+{
+  "name": "es6",
+  "scripts": {
+    "c": "babel -o main.js main.babel.js",
+    "start": "npm ru c -- -w"
+  },
+  "devDependencies": {
+    "babel": "^5.6.11"
+  }
+}

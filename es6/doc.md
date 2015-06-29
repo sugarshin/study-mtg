@@ -23,17 +23,17 @@ Node.js でもすでにオプションで有効可
 
 https://babeljs.io/
 
-ES6 用トランスパイラ
+ES6, ES7 用トランスパイラ
 
-ES6 で書かれたファイルを ES5 に変換
+ES6, ES7 で書かれたファイルを ES5 に変換
 
 #### トランスパイラ主要2つ
 
 * https://github.com/babel
   * 今のところの主流
-  * ES6のカバー率が高い
-  * JSX をコンパイル通さなくても理解してくれる
-  * だいたいのビルドツール、タスクランナー用のプラグインやエディタのシンタックスハイライト用プラグイン、Browserify Transformなども公式で有
+  * 機能、文法のカバー率が高く ES7 のカバー率も高い http://kangax.github.io/compat-table/es7/
+  * だいたいのビルドツール、タスクランナー用のプラグインや、エディタのシンタックスハイライト用プラグイン、Browserify Transformなども公式で有
+  * JSX をコンパイラ通さなくても理解してくれる
 * https://github.com/google/traceur-compiler
   * Google 製
   * ランタイムエンジンも配布してるのでアクセス時変換可
@@ -46,7 +46,7 @@ ES6 で書かれたファイルを ES5 に変換
 
 https://babeljs.io/repl/
 
-### コンパイラ
+### トランスパイラ
 
 https://github.com/babel/babel
 
@@ -87,28 +87,44 @@ var multi = num => {
 
 var multi = num => num * num;
 
+var result = array.map(el => el + 2);
+```
+
+デフォルト引数
+
+```js
 var multi = (num = 2) => {
   return num * num;
 };
+```
 
-array.forEach(el => console.log(el););
-var nums = evens.map((v, i) => v + i);
+this の束縛
 
-// Statement bodies
-nums.forEach(v => {
-  if (v % 5 === 0)
-    fives.push(v);
-});
+```js
+class Button {
+  constructor(el) {
+    this.el = el;
+    this.addClickListener();
+  }
 
-// Lexical this
-var bob = {
-  _name: "Bob",
-  _friends: [],
-  printFriends() {
-    this._friends.forEach(f =>
-      console.log(this._name + " knows " + f));
+  addClickListener(callback) {
+    this.el.addEventListener('click', callback);
+  }
+
+  rmClickListener(callback) {
+    this.el.removeEventListener('click', callback);
   }
 }
+
+var person = {
+  name: 'sato',
+  show: function() {
+    return this.name;
+  }
+};
+
+var el = document.querySelector('.el');
+el.addEventListener('click', ev => {});
 ```
 
 ## メリット・デメリット

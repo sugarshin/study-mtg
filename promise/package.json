@@ -1,0 +1,15 @@
+{
+  "name": "promise",
+  "description": "",
+  "scripts": {
+    "start": "budo main.js --live -v -- -t babelify | opnr | garnish"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "babelify": "^6.2.0",
+    "budo": "^4.2.1",
+    "garnish": "^2.3.0",
+    "opnr": "^1.0.4",
+    "watchify": "^3.3.1"
+  }
+}

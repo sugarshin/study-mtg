@@ -1,0 +1,14 @@
+{
+  "name": "study-mtg",
+  "description": "study-mtg",
+  "scripts": {
+    "slide:es6": "cleaver es6/doc.md && open doc-cleaver.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sugarshin/study-mtg.git"
+  },
+  "devDependencies": {
+    "cleaver": "^0.7.4"
+  }
+}

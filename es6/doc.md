@@ -1,4 +1,11 @@
+theme: jdan/cleaver-retro
+style: slide.css
+
+--
+
 # ES6 (ECMAScript 2015), Babel 技術共有会
+
+--
 
 ## 目次
 
@@ -7,7 +14,11 @@
 3. 文法や機能
 4. メリット・デメリット
 
+--
+
 ## 概要
+
+--
 
 ### ES6 (ECMAScript 2015)
 
@@ -19,6 +30,8 @@
 
 Node.js でもすでにオプションで有効可
 
+--
+
 ### Babel
 
 https://babeljs.io/
@@ -26,6 +39,8 @@ https://babeljs.io/
 ES6, ES7 用トランスパイラ
 
 ES6, ES7 で書かれたファイルを ES5 に変換
+
+--
 
 #### トランスパイラ主要2つ
 
@@ -38,17 +53,25 @@ ES6, ES7 で書かれたファイルを ES5 に変換
   * Google 製
   * ランタイムエンジンも配布してるのでアクセス時変換可
 
+--
+
 #### ES6, 7 の各ブラウザやトランスパイラの対応状況
 
 http://kangax.github.io/compat-table/es6/
 
+--
+
 ## 環境準備
+
+--
 
 ### REPL
 
 Babel はブラウザで試せます
 
 https://babeljs.io/repl/
+
+--
 
 ### トランスパイラ
 
@@ -71,6 +94,8 @@ https://github.com/babel/babel
 5. main.babel.js を編集
 6. 監視トランスパイル => main.js
 
+--
+
 ## 文法や機能
 
 参考：
@@ -78,9 +103,11 @@ https://github.com/babel/babel
 https://babeljs.io/docs/learn-es2015/
 https://github.com/lukehoban/es6features#readme
 
+--
+
 ### アロー関数
 
-```js
+```
 var multi = (num) => {
   return num * num;
 };
@@ -93,18 +120,21 @@ var multi = num => num * num;
 
 var result = array.map(el => el + 2);
 ```
+--
 
 デフォルト引数
 
-```js
+```
 var multi = (num = 2) => {
   return num * num;
 };
 ```
 
+--
+
 this の制御
 
-```js
+```
 class Button {
   constructor(el) {
     this.el = el;
@@ -122,9 +152,11 @@ var el = document.querySelector('.button');
 new Button(el);
 ```
 
+--
+
 ### クラス
 
-```js
+```
 class SkinnedMesh extends THREE.Mesh {
 
   constructor(geometry, materials) {
@@ -148,9 +180,11 @@ class SkinnedMesh extends THREE.Mesh {
 }
 ```
 
+--
+
 ### オブジェクトリテラルの機能強化
 
-```js
+```
 var obj = {
   // __proto__ を明示的に宣言可
   __proto__: theProtoObj,
@@ -170,13 +204,15 @@ var obj = {
 };
 ```
 
+--
+
 ### Template Strings
 
 ヒアドキュメント、変数展開など
 
 [ここ](http://js-next.hatenablog.com/entry/2014/11/22/042055)が詳しい
 
-```js
+```
 var str1 = `あいうえお
 かきくけこ`；
 
@@ -188,11 +224,13 @@ var arg = 'hello';
 var msg = `${arg} sato!`;
 ```
 
+--
+
 ### 分割代入
 
 http://js-next.hatenablog.com/entry/2015/05/18/181956
 
-```js
+```
 var [a, , b] = [1, 2, 3];
 // a => 1, b => 3
 
@@ -207,9 +245,11 @@ var { a, b } = o;
 import React, { Componet, PropTypes } from 'react';
 ```
 
+--
+
 ### import, export
 
-```js
+```
 import $ from 'jquery';
 
 import 'whatwg-fetch'; // 代入が必要ない場合
@@ -231,14 +271,20 @@ export const PI = 3.14;
 
 などなど
 
+--
+
 ## メリット・デメリット
 
 Babel でも Traceur compiler でも、ES5 なので、IE8 以下もサポートの場合は対応が必要（[es5-shim](https://github.com/es-shims/es5-shim) とか）
+
+--
 
 ### メリット
 
 * 貧弱だった言語機能が強化
 * AltJSなどで実現してきたものが組み込まれた
 * 標準仕様なので信頼性、将来性は保証されている
+
+--
 
 ### デメリット

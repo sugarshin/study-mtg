@@ -1,5 +1,5 @@
 theme: jdan/cleaver-retro
-style: slide.css
+style: ../slide.css
 
 --
 

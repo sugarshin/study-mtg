@@ -2,7 +2,8 @@
   "name": "study-mtg",
   "description": "study-mtg",
   "scripts": {
-    "slide:es6": "cleaver es6/doc.md && open doc-cleaver.html"
+    "slide:es6": "cleaver es6/doc.md && open doc-cleaver.html",
+    "slide:react": "cleaver react/doc.md && open doc-cleaver.html"
   },
   "repository": {
     "type": "git",

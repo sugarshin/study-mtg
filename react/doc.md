@@ -11,8 +11,8 @@ style: ../slide.css
 
 1. 概要
 2. Hello world
-3. 主なAPI、ライフサイクルメソッド
-4. Todoアプリ
+3. Todoアプリ
+4. 主なAPI、ライフサイクルメソッド
 5. Flux
 6. Redux
 7. まとめ
@@ -23,7 +23,7 @@ style: ../slide.css
 
 [github.com/facebook/react](//github.com/facebook/react)
 
-Facebook製のライブラリでMVCでいうところのビューの部分を担当
+Facebook製のライブラリでMVCでいうところのビューの部分
 
 あくまでビューのライブラリであって全体のアーキテクチャを制約するものではないのでフレームワークとは呼べない
 
@@ -142,6 +142,24 @@ class Header extends React.Component {
 
 [React JSFiddle](https://jsfiddle.net/reactjs/69z2wepo/)
 
+react@v0.14.0以前では`react-tools`というツールでJSにコンパイルしてたが、現在は[Babel](https://babeljs.io/)の利用を推奨している
+
+Babel => ES6, ES7のトランスパイラ
+
+[https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md](https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md)
+
+--
+
+### サーバサイドレンダリング
+
+`react-dom`にReactエレメントを文字列にして返すメソッド有
+
+`require('react-dom/server').renderToString()`
+
+JSの評価エンジンさえあればサーバ側でレンダリングしてhtml文字列としてクライアントに返せる
+
+なので初回アクセス時はサーバでレンダリングしたhtmlを返して、みたいなことができるのでSEO的にも、SPAの問題としてよく上がる初回表示の遅さもなんとかなる
+
 --
 
 ## Hello world
@@ -189,14 +207,318 @@ Componentについて
 
 --
 
+## Todoアプリデモ
+
+簡単なTodoアプリのデモ
+
+[http://codepen.io/sugarshin/pen/dYmZgN](http://codepen.io/sugarshin/pen/dYmZgN)
+
+--
+
+```
+import React, { Component } from 'react';
+
+// Todoコンポーネント
+class Todo extends Component {
+  render() {
+    const { complete, text } = this.props;
+
+    // 必ず1つのコンポーネント（html）を返す
+    return (
+      // インラインcssは`style`属性にオブジェクトを渡す
+      <div style={{
+        opacity: complete ? .5 : 1,
+        textDecoration: complete ? 'line-through' : 'none'
+      }}>
+        // 各DOMのイベントは `on + イベント名` みたいは感じでハンドリングする
+        <input type="checkbox" checked={complete} onChange={this.handleClickCheckbox.bind(this)} />
+        <span>{text}</span>
+        <button onClick={this.handleClickDelete.bind(this)}>Delete</button>
+      </div>
+    );
+  }
+
+  handleClickCheckbox() {
+    this.props.onClickCheckbox(this.props.id);
+  }
+
+  handleClickDelete() {
+    this.props.onClickDelete(this.props.id);
+  }
+}
+```
+
+--
+
+```
+import React, { Component } from 'react';
+
+// 追加ボタン
+class AddTodo extends Component {
+  render() {
+    return (
+      <div>
+        // `ref` 属性を指定しておくと同コンポーネントから`this.refs[名前]`で参照できる
+        <input type="text" ref="input" placeholder="Todo name" />
+        <button onClick={this.handleClickButtonAdd.bind(this)}>Add</button>
+      </div>
+    );
+  }
+
+  handleClickButtonAdd() {
+    this.props.onClickAdd(this.refs.input.value);
+  }
+}
+```
+
+--
+
+```
+import React, { Component } from 'react';
+
+class TodoList extends Component {
+
+  // 初期化処理
+  // `React.createClass()`で`getInitialState()`していた部分は
+  // ここで`this.state`で定義する
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      todos: []
+    };
+  }
+
+  render() {
+    // Reactエレメントの配列
+    const todos = this.state.todos.map(todo => (
+      // `key`属性に一意の値を渡す
+      // warningがでる、 diff/patchが遅くなる
+      <Todo key={todo.id} onClickDelete={this.deleteTodo.bind(this)} onClickCheckbox={this.changeComplete.bind(this)} {...todo} />
+    ));
+
+    return (
+      <div>
+        // propsとしてAddボタンがクリックされたときの処理を渡す
+        <AddTodo onClickAdd={this.addTodo.bind(this)} />
+        // 配列もうまく展開してくれる
+        <ul>{todos}</ul>
+      </div>
+    );
+  }
+
+  // 各イベントハンドラ
+  addTodo(text) {
+
+    // `setState()`で自身のstateを更新する
+    // `this.state`を直接触らない（diff/patchがうまく走らなくなって適切にrenderされなくなる）
+    this.setState({
+      todos: [...this.state.todos, {
+        id: Date.now(),
+        text,
+        complete: false
+      }]
+    });
+  }
+
+  deleteTodo(id) {
+    this.setState({
+      todos: this.state.todos.filter(todo => todo.id !== id)
+    });
+  }
+
+  changeComplete(id) {
+    this.setState({
+      todos: this.state.todos.map(todo => {
+        if (todo.id === id) {
+          todo.complete = !todo.complete;
+        }
+        return todo;
+      })
+    });
+  }
+}
+```
+
+--
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import TodoList ftom './TodoList';
+
+// 第２引数にマウント先のDOMを指定してレンダリング
+ReactDOM.render(<TodoList />, document.getElementById('root'));
+// document.bodyを指定するとwarning
+```
+
+--
+
+```
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+
+class Todo extends Component {
+  render() {
+    return (
+      <div style={{
+        opacity: this.props.complete ? .5 : 1,
+        textDecoration: this.props.complete ? 'line-through' : 'none'
+      }}>
+        <input type="checkbox" checked={this.props.complete} onChange={this.handleClickCheckbox.bind(this)} />
+        <span>{this.props.text}</span>
+        <button onClick={this.handleClickDelete.bind(this)}>Delete</button>
+      </div>
+    );
+  }
+
+  handleClickCheckbox() {
+    this.props.onClickCheckbox(this.props.id);
+  }
+
+  handleClickDelete() {
+    this.props.onClickDelete(this.props.id);
+  }
+}
+
+class AddTodo extends Component {
+  render() {
+    return (
+      <div>
+        <input type="text" ref="input" placeholder="task name" />
+        <button onClick={this.handleClickButtonAdd.bind(this)}>Add</button>
+      </div>
+    );
+  }
+
+  handleClickButtonAdd() {
+    this.props.onClickAdd(this.refs.input.value);
+  }
+}
+
+class TodoList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      todos: []
+    };
+  }
+
+  render() {
+    const todos = this.state.todos.map(todo => (
+      <Todo key={todo.id} onClickDelete={this.deleteTodo.bind(this)} onClickCheckbox={this.changeComplete.bind(this)} {...todo} />
+    ));
+
+    return (
+      <div>
+        <AddTodo onClickAdd={this.addTodo.bind(this)} />
+        <ul>{todos}</ul>
+      </div>
+    );
+  }
+
+  addTodo(text) {
+    this.setState({
+      todos: [...this.state.todos, {
+        id: Date.now(),
+        text,
+        complete: false
+      }]
+    });
+  }
+
+  deleteTodo(id) {
+    this.setState({
+      todos: this.state.todos.filter(todo => todo.id !== id)
+    });
+  }
+
+  changeComplete(id) {
+    this.setState({
+      todos: this.state.todos.map(todo => {
+        if (todo.id === id) {
+          todo.complete = !todo.complete;
+        }
+        return todo;
+      })
+    });
+  }
+}
+
+ReactDOM.render(<TodoList />, document.getElementById('root'));
+```
+
+--
+
+## 主なAPI、ライフサイクルメソッド
+
+コンポーネントの状態の変化や適切なタイミングで呼ばれる決まったメソッドがある
+
+例えば、
+
+* DOMに追加されたとき、される直前
+* renderが走ったあと
+* propsが更新される前
+
+などなど
+
+[http://qiita.com/koba04/items/66e9c5be8f2e31f28461](http://qiita.com/koba04/items/66e9c5be8f2e31f28461)
+
+--
+
+```
+class Button extends Component {
+
+  componentDidMount() {
+    ...
+  }
+
+  componentDidUpdate() {
+    ...
+  }
+
+  render() {
+    return <button>Button</button>;
+  }
+
+}
+```
+
+--
+
+よくやる例としては、
+
+`componentDidMount()`でコンポーネントが追加されたあとにDOMにイベントリスナを登録し、
+
+`componentWillUnmount()`でコンポーネントがDOMから削除される前にイベントリスナを解除してメモリリーク対策
+
+--
+
+`shouldComponentUpdate()`
+
+パフォーマンス対策に利用
+
+`true`か`false`を返す
+
+`false`だとdiff/patchが行われなくなる
+
+無駄な計算や処理を削減しパフォーマンス向上をはかれる
+
+[http://qiita.com/koba04/items/66e9c5be8f2e31f28461#shouldcomponentupdate](http://qiita.com/koba04/items/66e9c5be8f2e31f28461#shouldcomponentupdate)
+
+--
+
 ## まとめ
 
 * [https://github.com/sugarshin/react-redux-starter](https://github.com/sugarshin/react-redux-starter)
+
 * [https://github.com/sugarshin/figleditr](https://github.com/sugarshin/figleditr)
 * [https://github.com/sugarshin/translate-annotator](https://github.com/sugarshin/translate-annotator)
 * [https://github.com/sugarshin/noto](https://github.com/sugarshin/noto)
 * [https://github.com/sugarshin/sobap](https://github.com/sugarshin/sobap)
 * [https://github.com/sugarshin/rmd](https://github.com/sugarshin/rmd)
+
 * [https://github.com/sugarshin/react-social](https://github.com/sugarshin/react-social)
 * [https://github.com/sugarshin/react-timer](https://github.com/sugarshin/react-timer)
 * [https://github.com/sugarshin/react-floatvox](https://github.com/sugarshin/react-floatvox)

@@ -1,6 +1,7 @@
 * {
   font-style: normal !important;
 }
+
 .slide-content {
   width: auto;
   height: auto;
@@ -13,4 +14,10 @@ code {
 img {
   max-width: 100%;
   height: auto;
+}
+
+blockquote {
+  opacity: .8;
+  border-left: 3px solid;
+  padding-left: 1em;
 }

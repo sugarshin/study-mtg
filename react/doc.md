@@ -29,7 +29,7 @@ Facebook製のライブラリでMVCでいうところのビューの部分
 
 --
 
-### 特長
+### 主な特長3つ
 
 --
 
@@ -509,16 +509,130 @@ class Button extends Component {
 
 --
 
+## Flux
+
+Reactとペアでよく話されるアーキテクチャのこと
+
+実装ではなくあくまでアーキテクチャの話
+
+なのでオレオレFlux乱立
+
+--
+
+各種実装
+
+* [https://github.com/facebook/flux](https://github.com/facebook/flux)
+* [https://github.com/BinaryMuse/fluxxor](https://github.com/BinaryMuse/fluxxor)
+* [https://github.com/azu/material-flux](https://github.com/azu/material-flux)
+* [https://github.com/reflux/refluxjs](https://github.com/reflux/refluxjs)
+* [https://github.com/yahoo/fluxible](https://github.com/yahoo/fluxible)
+* [https://github.com/rackt/redux/](https://github.com/rackt/redux/)
+
+--
+
+Facebookが提唱したMVCアーキテクチャの改変版
+
+ただのobserverパターン（Pub Subパターン）=> NodeでいうところのEventEmitterみたいなもの
+
+Reactを効率よく利用するためにFacebookが提示したもの
+
+Facebookは「MVCはスケールしない」みたいに言ってるけど結局オレオレMVCみたいなものだと思う
+
+※ここでいうMVCはサーバサイドMVCではなくて、Smalltalk MVCなどのGUI構築のためのMVCのこと
+
+> モデル - 問題対象としてのデータとそのデータに対する操作。
+> ビュー - ディスプレイを通して、モデルからユーザへ情報を提供するもの。
+> コントローラ - ユーザからの入力を解釈して、モデルあるいはビューに適切な調整を施すもの。
+
+[http://www.cdl.im.dendai.ac.jp/~masuda/mvc.html](http://www.cdl.im.dendai.ac.jp/~masuda/mvc.html)
+
+--
+
+よく見る図
+
+![Flux](https://raw.githubusercontent.com/facebook/flux/master/docs/img/flux-diagram-white-background.png)
+
+**Fluxの最も優れている点は上記に「Flux」と名前をつけたところ**
+
+--
+
+**データの流れは常に一方向**
+
+これによりReactと相性が良い
+
+主な層は
+
+* ActionCreator => Dispatcherにアクション（だいたいの場合`type`キーとそのアクションごとのデータをもったオブジェクト）を送る
+* Dispatcher => 受けたアクションをStoreの適切なところへ送る
+* Store => 送られてきたアクションを元に自身のstate（アプリケーションの状態）を更新
+* View (React) => storeをlistenしておいて、storeの更新を検知し、適宜レンダリング
+  * DOMイベント等を通じてActionCreatorを通してアクションを生成
+
+という、一方向サイクル
+
+--
+
+簡単なFlux実装の例
+
+データの流れが一方向、というのがポイントの1つなので、それを簡単に再現
+
+```javascript
+class EventEmitter {
+  constructor() {
+    this.events = {};
+  }
+
+  on(name, listener) {
+    this.events[name] = this.events[name] || [];
+    this.events[name] = [...this.events[name], listener];
+  }
+
+  off(name, listener) {
+    if (listener) {
+      this.events[name] = this.events[name].filter(l => l !== listener);
+    } else {
+      delete this.events[name];
+    }
+  }
+
+  emit(name) {
+    this.events[name].forEach(listener => listener());
+  }
+}
+
+const emitter = new EventEmitter();
+
+emitter.on('some', () => console.log('hoge'));
+emitter.emit('some'); // => 'hoge'
+```
+
+--
+
+参考資料
+
+* [http://qiita.com/nobkz/items/75d1a9115d8aaadac433](http://qiita.com/nobkz/items/75d1a9115d8aaadac433)
+
+--
+
 ## まとめ
 
-* [https://github.com/sugarshin/react-redux-starter](https://github.com/sugarshin/react-redux-starter)
+参考資料
 
-* [https://github.com/sugarshin/figleditr](https://github.com/sugarshin/figleditr)
-* [https://github.com/sugarshin/translate-annotator](https://github.com/sugarshin/translate-annotator)
-* [https://github.com/sugarshin/noto](https://github.com/sugarshin/noto)
-* [https://github.com/sugarshin/sobap](https://github.com/sugarshin/sobap)
-* [https://github.com/sugarshin/rmd](https://github.com/sugarshin/rmd)
+* [https://www.oreilly.co.jp/books/9784873117195/](https://www.oreilly.co.jp/books/9784873117195/)
+* [http://qiita.com/advent-calendar/2014/reactjs](http://qiita.com/advent-calendar/2014/reactjs)
+* [http://qiita.com/advent-calendar/2014/virtual-dom](http://qiita.com/advent-calendar/2014/virtual-dom)
+* [https://speakerdeck.com/geta6/reacttofluxfalsekoto](https://speakerdeck.com/geta6/reacttofluxfalsekoto)
 
-* [https://github.com/sugarshin/react-social](https://github.com/sugarshin/react-social)
-* [https://github.com/sugarshin/react-timer](https://github.com/sugarshin/react-timer)
-* [https://github.com/sugarshin/react-floatvox](https://github.com/sugarshin/react-floatvox)
+React, Flux周りを利用して書いたもの
+
+* React, Redux実装のアプリ [https://github.com/sugarshin/figleditr](https://github.com/sugarshin/figleditr)
+* React, Redux実装のアプリ [https://github.com/sugarshin/translate-annotator](https://github.com/sugarshin/translate-annotator)
+* React, facebook/flux実装のアプリ [https://github.com/sugarshin/noto](https://github.com/sugarshin/noto)
+* React, facebook/flux実装のアプリ [https://github.com/sugarshin/sobap](https://github.com/sugarshin/sobap)
+* React, facebook/flux実装のアプリ [https://github.com/sugarshin/rmd](https://github.com/sugarshin/rmd)
+
+* Reactコンポーネント [https://github.com/sugarshin/react-social](https://github.com/sugarshin/react-social)
+* Reactコンポーネント [https://github.com/sugarshin/react-timer](https://github.com/sugarshin/react-timer)
+* Reactコンポーネント [https://github.com/sugarshin/react-floatvox](https://github.com/sugarshin/react-floatvox)
+
+* React, Reduxのスターターボイラープレート [https://github.com/sugarshin/react-redux-starter](https://github.com/sugarshin/react-redux-starter)

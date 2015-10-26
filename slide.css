@@ -2,9 +2,15 @@
   font-style: normal !important;
 }
 .slide-content {
+  width: auto;
   height: auto;
 }
 
 code {
   font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }

@@ -49,7 +49,7 @@ DOMと対を成すツリー上の構造体を表したデータ（JavaScriptオ�
 
 雑な例
 
-```
+```javascript
 {
   html: {
     attributes: {...},
@@ -126,7 +126,7 @@ http://qiita.com/mizchi/items/4d25bc26def1719d52e6
 
 JSXというJavaScript中にXML的なもの書けてHTMLを表現できる
 
-```
+```javascript
 class Header extends React.Component {
 
   render() {
@@ -171,7 +171,7 @@ version
 
 --
 
-```
+```javascript
 import React, { Component } from 'react';
 import ReacDOM from 'react-dom';
 
@@ -215,7 +215,7 @@ Componentについて
 
 --
 
-```
+```javascript
 import React, { Component } from 'react';
 
 // Todoコンポーネント
@@ -250,7 +250,7 @@ class Todo extends Component {
 
 --
 
-```
+```javascript
 import React, { Component } from 'react';
 
 // 追加ボタン
@@ -273,7 +273,7 @@ class AddTodo extends Component {
 
 --
 
-```
+```javascript
 import React, { Component } from 'react';
 
 class TodoList extends Component {
@@ -342,7 +342,7 @@ class TodoList extends Component {
 
 --
 
-```
+```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TodoList ftom './TodoList';
@@ -354,7 +354,7 @@ ReactDOM.render(<TodoList />, document.getElementById('root'));
 
 --
 
-```
+```javascript
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
@@ -467,7 +467,7 @@ ReactDOM.render(<TodoList />, document.getElementById('root'));
 
 --
 
-```
+```javascript
 class Button extends Component {
 
   componentDidMount() {

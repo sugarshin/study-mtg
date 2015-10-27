@@ -1,4 +1,3 @@
-theme: jdan/cleaver-retro
 style: ../slide.css
 
 --
@@ -89,6 +88,8 @@ DOMと対を成すツリー上の構造体を表したデータ（JavaScriptオ�
 と、
 
 それを用いたdiff/patchアルゴリズムを指す
+
+例えば
 
 `body h1 a.link` の `href` 属性に差分が検出されると、
 
@@ -275,6 +276,8 @@ render(<Counter />, document.getElementById('root'));
 
 --
 
+Todoコンポーネント
+
 ```javascript
 import React, { Component, PropTypes } from 'react';
 
@@ -324,6 +327,8 @@ class Todo extends Component {
 
 --
 
+AddTodoボタンコンポーネント
+
 ```javascript
 import React, { Component } from 'react';
 
@@ -353,6 +358,8 @@ class AddTodo extends Component {
 ```
 
 --
+
+TodoListコンポーネント
 
 ```javascript
 import React, { Component } from 'react';
@@ -416,6 +423,8 @@ class TodoList extends Component {
 ```
 
 --
+
+実行部分
 
 ```javascript
 import React from 'react';
@@ -608,11 +617,11 @@ Reactとペアでよく話されるアーキテクチャのこと
 
 --
 
-Facebookが提唱したMVCアーキテクチャの改変版
+Reactを効率よく利用するためにFacebookが提唱したもの
+
+MVCアーキテクチャの改変版
 
 ただのObserverパターン（Pub Subパターン）=> NodeでいうところのEventEmitterみたいなもの
-
-Reactを効率よく利用するためにFacebookが提示したもの
 
 Facebookは「MVCはスケールしない」みたいに言ってるけど結局オレオレMVCみたいなものだと思う
 
@@ -656,6 +665,65 @@ Facebookは「MVCはスケールしない」みたいに言ってるけど結局
 
 データの流れが一方向、というのがポイントの1つなので、それを簡単に再現
 
+ここでは `Dispatcher` は `EventEmitter` と考えます
+
+--
+
+イメージ
+
+```
+[View] DOMイベント等からアクションを呼ぶ ------> [ActionCreator] 適切なアクションを作ってStoreへ通知
+                                               |
+ViewはStoreを監視しておいて変更があるとレンダリング        |
+  |                                            |
+  ----------------------------------------- [Store] 受け取ったアクションを元に自身を更新
+```
+
+--
+
+まずはStore層をつくる
+
+```javascript
+import { EventEmitter } from 'events';
+
+class Store extends EventEmitter {
+
+  // stateの初期化　これがアプリケーションの状態
+  // dispatcherを受け取って
+  // それぞれのアクションの名前にリスナを登録
+  constructor(dispatcher) {
+    super();
+    this.state = { count: 0 };
+    dispatcher.on('countup', this.onCountUp.bind(this));
+    dispatcher.on('countdown', this.onCountDown.bind(this));
+  }
+
+  // 外部からstateにアクセスできるようにしておく
+  getState() {
+    return this.state;
+  }
+
+  // 'countup'アクションが渡ってきたとき（'countup'イベントがemitされたとき）のコールバック
+  // 同時に 'CHANGE' イベントをemitする
+  // listenしてるView（React）にstateが更新されたことが通知される
+  onCountUp(count) {
+    this.state = { count: this.state.count + count };
+    this.emit('CHANGE');
+  }
+
+  onCountDown(count) {
+    this.state = { count: this.state.count - count };
+    this.emit('CHANGE');
+  }
+
+}
+
+```
+
+--
+
+EventEmitterの実装例
+
 ```javascript
 class EventEmitter {
   constructor() {
@@ -686,22 +754,197 @@ emitter.on('some', () => console.log('hoge'));
 emitter.emit('some'); // => 'hoge'
 ```
 
+ここでは Node の `require('events').EventEmitter` を使います
+
 --
 
-参考資料
+Action Creator
 
-* [http://qiita.com/nobkz/items/75d1a9115d8aaadac433](http://qiita.com/nobkz/items/75d1a9115d8aaadac433)
+```javascript
+class ActionCreator {
+
+  // Storeと同じdispatcherを受け取る
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
+  }
+
+  // Viewから呼ばれるアクションたち
+  // 'countup'イベントをemit
+  countUp(count) {
+    this.dispatcher.emit('countup', count);
+  }
+
+  countDown(count) {
+    this.dispatcher.emit('countdown', count);
+  }
+
+}
+```
+
+--
+
+```javascript
+import React, { Component } from 'react';
+
+// Dispatcher
+const dispatcher = new EventEmitter();
+
+const action = new ActionCreator(dispatcher);
+const store = new Store(dispatcher);
+
+class Counter extends Component {
+
+  constructor() {
+    super();
+
+    // `state`の初期値をstoreから`getState`してとってくる
+    const { count } = store.getState();
+    this.state = { count };
+
+    // `store`が更新されたとき（'CHNANGE'イベントがemitされたとき）のコールバックをここで登録
+    store.on('CHANGE', this.onChangeState.bind(this));
+  }
+
+  render() {
+    return (
+      <div>
+        <span>{this.state.count}</span>
+        <button onClick={this.handleClickUp.bind(this)}>Count up</button>
+        <button onClick={this.handleClickDown.bind(this)}>Count down</button>
+        <select defaultValue="1" ref="rate">
+          <option value="1">1</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+    );
+  }
+
+  // `store`が更新されると呼ばれて`setState()`してレンダリングする
+  onChangeState() {
+    const { count } = store.getState();
+    this.setState({ count });
+  }
+
+  // クリックイベントでアクションを呼ぶ
+  handleClickUp() {
+    action.countUp(+this.refs.rate.value);
+  }
+
+  handleClickDown() {
+    action.countDown(+this.refs.rate.value);
+  }
+
+}
+
+```
+--
+
+```javascript
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+import { EventEmitter } from 'events';
+
+class Store extends EventEmitter {
+  constructor(dispatcher) {
+    super();
+    this.state = { count: 0 };
+    dispatcher.on('countup', this.onCountUp.bind(this));
+    dispatcher.on('countdown', this.onCountDown.bind(this));
+  }
+
+  getState() {
+    return this.state;
+  }
+
+  onCountUp(count) {
+    this.state = { count: this.state.count + count };
+    this.emit('CHANGE');
+  }
+
+  onCountDown(count) {
+    this.state = { count: this.state.count - count };
+    this.emit('CHANGE');
+  }
+}
+
+class ActionCreator {
+  constructor(dispatcher) {
+    this.dispatcher = dispatcher;
+  }
+
+  countUp(count) {
+    this.dispatcher.emit('countup', count);
+  }
+
+  countDown(count) {
+    this.dispatcher.emit('countdown', count);
+  }
+}
+
+const dispatcher = new EventEmitter()
+
+const action = new ActionCreator(dispatcher);
+const store = new Store(dispatcher);
+
+
+class Counter extends Component {
+  constructor() {
+    super();
+
+    const { count } = store.getState();
+    this.state = { count };
+
+    store.on('CHANGE', this.onChangeState.bind(this));
+  }
+
+  render() {
+    return (
+      <div>
+        <span>{this.state.count}</span>
+        <button onClick={this.handleClickUp.bind(this)}>Count up</button>
+        <button onClick={this.handleClickDown.bind(this)}>Count down</button>
+        <select defaultValue="1" ref="rate">
+          <option value="1">1</option>
+          <option value="10">10</option>
+        </select>
+      </div>
+    );
+  }
+
+  onChangeState() {
+    const { count } = store.getState();
+    this.setState({ count });
+  }
+
+  handleClickUp() {
+    action.countUp(+this.refs.rate.value);
+  }
+
+  handleClickDown() {
+    action.countDown(+this.refs.rate.value);
+  }
+}
+
+const rootEl = document.createElement('div');
+document.body.appendChild(rootEl);
+
+render(<Counter />, rootEl);
+```
+
+[https://github.com/sugarshin/study-mtg/tree/master/react/flux](https://github.com/sugarshin/study-mtg/tree/master/react/flux)
 
 --
 
 ## Redux
 
-* Fluxの仲間
-* 作者はFluxであってFluxではないとか言ってます
-* ヨーロッパのReact confでも作者が登壇して発表し、ヨーロッパでは一番盛り上がってる　日本だとまだあまり盛り上がってないけど
-* もうFluxこれでいいんじゃないの的な雰囲気
-
 [https://github.com/rackt/redux](https://github.com/rackt/redux)
+
+* Fluxの仲間
+* 作者はFluxであってFluxではないって言ってる
+* ヨーロッパのReactカンファレンスで作者が登壇してReduxについて発表
+* Flux実装で今一番盛り上がってる
+* 日本だとまだあまり盛り上がってない
+* もうFluxこれでいいんじゃないの的な雰囲気
 
 docs: [http://redux.js.org/](http://redux.js.org/)
 
@@ -731,6 +974,8 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 見通しがいい
 
 AngularのモデルレイヤーをReduxでということも可能
+
+**Redux == Reducers + Flux**
 
 
 参考：

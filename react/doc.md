@@ -193,7 +193,7 @@ render(<Hello name="world" />, document.getElementById('root'));
 
 --
 
-Componentのビューとロジッの密結合について
+Componentのビューとロジックの密結合について
 
 [http://qiita.com/koba04/items/4f874e0da8ebd7329701](http://qiita.com/koba04/items/4f874e0da8ebd7329701)
 
@@ -266,7 +266,34 @@ render(<Counter />, document.getElementById('root'));
 
 --
 
-### Todoアプ
+### Stateless Component
+
+react@v0.14 からstateを持たない、propsだけに依存するようなコンポーネントの新しい定義の仕方ができるようになった
+
+```javascript
+// コンポーネントを返すだけの関数として定義
+// 引数にpropsが渡ってくる
+export default function Footer(props) {
+  return <footer>{props.copyright}</footer>;
+}
+
+// propTypesやdefaultPropsも定義できる
+Footer.propTypes = {
+  copyright: PropTypes.string.isRequired
+};
+```
+
+ライフサイクルメソッドは利用できない
+
+react@v0.15はパフォーマンス改善等のリリースのようで、
+
+このStateless Componentの書き方で書いておくとパフォーマンスの支援を受けられる
+
+今後はこの方法を主に使っていくことになると思う
+
+--
+
+### Todoアプリ
 
 簡単なTodoアプリのデモ
 
@@ -281,7 +308,6 @@ Todoコンポーネント
 ```javascript
 import React, { Component, PropTypes } from 'react';
 
-// Todoコンポーネント
 class Todo extends Component {
 
   // 外部から受け取る`props`に対してそれぞれのバリデーションをスタティックプロパティとして定義できる
@@ -315,6 +341,7 @@ class Todo extends Component {
     );
   }
 
+  // propsとして外部（親）から渡された関数を実行
   handleClickCheckbox() {
     this.props.onClickCheckbox(this.props.id);
   }
@@ -332,7 +359,6 @@ AddTodoボタンコンポーネント
 ```javascript
 import React, { Component } from 'react';
 
-// 追加ボタン
 class AddTodo extends Component {
 
   static get propTypes() {
@@ -379,7 +405,10 @@ class TodoList extends Component {
     const todos = this.state.todos.map(todo => (
       // `key`属性に一意の値を渡す
       // 必須ではないけどwarningがでる、 diff/patch処理が遅くなる
-      <Todo key={todo.id} onClickDelete={this.deleteTodo.bind(this)} onClickCheckbox={this.changeComplete.bind(this)} {...todo} />
+      <Todo key={todo.id}
+            onClickDelete={this.deleteTodo.bind(this)}
+            onClickCheckbox={this.changeComplete.bind(this)}
+            {...todo} />
     ));
 
     return (
@@ -674,10 +703,12 @@ Facebookは「MVCはスケールしない」みたいに言ってるけど結局
 ```
 [View] DOMイベント等からアクションを呼ぶ ------> [ActionCreator] 適切なアクションを作ってStoreへ通知
                                                |
-ViewはStoreを監視しておいて変更があるとレンダリング |
+ViewはStoreを監視しておいて変更があるとレンダリング   |
   |                                            |
   ----------------------------------------- [Store] 受け取ったアクションを元に自身を更新
 ```
+
+それぞれの架け渡し的な存在がDispatcher(EventEmitter)
 
 --
 
@@ -689,8 +720,7 @@ import { EventEmitter } from 'events';
 class Store extends EventEmitter {
 
   // stateの初期化　これがアプリケーションの状態
-  // dispatcherを受け取って
-  // それぞれのアクションの名前にリスナを登録
+  // dispatcherを受け取ってそれぞれのアクションの名前にリスナを登録
   constructor(dispatcher) {
     super();
     this.state = { count: 0 };
@@ -743,8 +773,8 @@ class EventEmitter {
     }
   }
 
-  emit(name) {
-    this.events[name].forEach(listener => listener());
+  emit(name, payload) {
+    this.events[name].forEach(listener => listener(payload));
   }
 }
 

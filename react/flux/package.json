@@ -1,0 +1,12 @@
+{
+  "name": "flux",
+  "description": "flux",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "babelify": "^6.4.0",
+    "budo": "^5.1.5",
+    "garnish": "^3.2.1"
+  }
+}

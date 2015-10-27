@@ -11,8 +11,8 @@ style: ../slide.css
 
 1. 概要
 2. Hello world
-3. Todoアプリ
-4. 主なAPI、ライフサイクルメソッド
+3. デモ
+4. ライフサイクルメソッド
 5. Flux
 6. Redux
 7. まとめ
@@ -25,7 +25,7 @@ style: ../slide.css
 
 Facebook製のライブラリでMVCでいうところのビューの部分
 
-あくまでビューのライブラリであって全体のアーキテクチャを制約するものではないのでフレームワークとは呼べない
+あくまでビューのライブラリであって全体のアーキテクチャを制約するものではないのでフレームワークではない
 
 --
 
@@ -90,11 +90,11 @@ DOMと対を成すツリー上の構造体を表したデータ（JavaScriptオ�
 
 それを用いたdiff/patchアルゴリズムを指す
 
-`body h1 a` の `textContent` に差分が検出されると、
+`body h1 a.link` の `href` 属性に差分が検出されると、
 
-`document.querySelector('a').textContent = 'new text';`
+`document.querySelector('a.link').setAttribute('href', '/new/link')`
 
-が走るイメージ
+だけが走るイメージ
 
 http://qiita.com/mizchi/items/4d25bc26def1719d52e6
 
@@ -144,7 +144,9 @@ class Header extends React.Component {
 
 react@v0.14.0以前では`react-tools`というツールでJSにコンパイルしてたが、現在は[Babel](https://babeljs.io/)の利用を推奨している
 
-Babel => ES6, ES7のトランスパイラ
+Babel => ES6, ES7のトランスパイラ JSXも面倒みてくれる => 作者Facebookに入社 => 現在18, 9歳
+
+ES6について：
 
 [https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md](https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md)
 
@@ -158,7 +160,7 @@ Babel => ES6, ES7のトランスパイラ
 
 JSの評価エンジンさえあればサーバ側でレンダリングしてhtml文字列としてクライアントに返せる
 
-なので初回アクセス時はサーバでレンダリングしたhtmlを返して、みたいなことができるのでSEO的にも、SPAの問題としてよく上がる初回表示の遅さもなんとかなる
+なので初回アクセス時はサーバでレンダリング済みのhtmlを返して、みたいなことができるのでSEO的にも、SPAの問題としてよくあがる初回表示の遅さもなんとかなる
 
 --
 
@@ -173,7 +175,7 @@ version
 
 ```javascript
 import React, { Component } from 'react';
-import ReacDOM from 'react-dom';
+import { render } from 'react-dom';
 
 class Hello extends Component {
   render() {
@@ -181,22 +183,16 @@ class Hello extends Component {
   }
 }
 
-ReacDOM.render(<Hello name="world" />, document.getElementById('root'));
+render(<Hello name="world" />, document.getElementById('root'));
 ```
 
 [http://codepen.io/sugarshin/pen/wKmPry](http://codepen.io/sugarshin/pen/wKmPry)
-
---
-
-* 1つのコンポーネントを返す
-* `state`で自身の状態を保持する
-* `props`で外部とやりとりする
 
 `React.createClass()`に`render`メソッドをもつオブジェクトを渡すことでも作成できる
 
 --
 
-Componentについて
+Componentのビューとロジッの密結合について
 
 [http://qiita.com/koba04/items/4f874e0da8ebd7329701](http://qiita.com/koba04/items/4f874e0da8ebd7329701)
 
@@ -207,19 +203,97 @@ Componentについて
 
 --
 
-## Todoアプリデモ
+## デモ
+
+### カウンター
+
+[http://codepen.io/sugarshin/pen/RWMmQX](http://codepen.io/sugarshin/pen/RWMmQX)
+
+[https://github.com/sugarshin/study-mtg/tree/master/react/counter](https://github.com/sugarshin/study-mtg/tree/master/react/counter)
+
+```javascript
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+
+class Counter extends Component {
+
+  constructor() {
+    super();
+
+    // 初期state（状態）をここで定義
+    // `React.createClass` でやる場合の `getInitialState` と同じ
+    this.state = {
+      count: 0
+    };
+  }
+
+  render() {
+    // 必ず1つのコンポーネント（html）を返す
+    return (
+      <div>
+        // `{}` はJavaScriptの式として評価してくれる
+        <span>{this.state.count}</span>
+        // DOMのイベントは 'on + イベント名' でハンドリングする
+        <button onClick={this.handleClickUp.bind(this)}>Count up</button>
+        <button onClick={this.handleClickDown.bind(this)}>Count down</button>
+      </div>
+    );
+  }
+
+  handleClickUp() {
+    // `setState()` で自身の状態を更新する
+    // `this.state`を直接触らない
+    this.setState({ count: this.state.count + 1 });
+  }
+
+  handleClickDown() {
+    this.setState({ count: this.state.count - 1 });
+  }
+
+}
+
+// 第1引数にマウントするコンポーネント、第2引数にマウント先のDOMの参照を渡してレンダリング
+render(<Counter />, document.getElementById('root'));
+```
+
+--
+
+* 1つのコンポーネントを返す
+* `state`で自身の状態を保持できる
+* `setState()`で`state`を更新すると`render()`が走ってレンダリングしてくれる
+* `props`で外部とやりとりもできる
+
+--
+
+### Todoアプ
 
 簡単なTodoアプリのデモ
 
 [http://codepen.io/sugarshin/pen/dYmZgN](http://codepen.io/sugarshin/pen/dYmZgN)
 
+[https://github.com/sugarshin/study-mtg/tree/master/react/todo](https://github.com/sugarshin/study-mtg/tree/master/react/todo)
+
 --
 
 ```javascript
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 
 // Todoコンポーネント
 class Todo extends Component {
+
+  // 外部から受け取る`props`に対してそれぞれのバリデーションをスタティックプロパティとして定義できる
+  // エラーを検出した場合エラーは投げられず、warningになるのみ
+  // しかもproduction環境では無視される
+  static get propTypes() {
+    return {
+      id: PropTypes.number.isRequired,
+      text: PropTypes.string.isRequired,
+      complete: PropTypes.bool.isRequired,
+      onClickCheckbox: PropTypes.func.isRequired,
+      onClickDelete: PropTypes.func.isRequired
+    };
+  }
+
   render() {
     const { complete, text } = this.props;
 
@@ -255,6 +329,13 @@ import React, { Component } from 'react';
 
 // 追加ボタン
 class AddTodo extends Component {
+
+  static get propTypes() {
+    return {
+      onClickAdd: PropTypes.func.isRequired
+    };
+  }
+
   render() {
     return (
       <div>
@@ -278,11 +359,8 @@ import React, { Component } from 'react';
 
 class TodoList extends Component {
 
-  // 初期化処理
-  // `React.createClass()`で`getInitialState()`していた部分は
-  // ここで`this.state`で定義する
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
       todos: []
@@ -290,16 +368,16 @@ class TodoList extends Component {
   }
 
   render() {
-    // Reactエレメントの配列
+    // `this.state.todos`からTodo Reactエレメントの配列をつくる
     const todos = this.state.todos.map(todo => (
       // `key`属性に一意の値を渡す
-      // warningがでる、 diff/patchが遅くなる
+      // 必須ではないけどwarningがでる、 diff/patch処理が遅くなる
       <Todo key={todo.id} onClickDelete={this.deleteTodo.bind(this)} onClickCheckbox={this.changeComplete.bind(this)} {...todo} />
     ));
 
     return (
       <div>
-        // propsとしてAddボタンがクリックされたときの処理を渡す
+        // propsとしてAddボタンがクリックされたときのコールバックを渡す
         <AddTodo onClickAdd={this.addTodo.bind(this)} />
         // 配列もうまく展開してくれる
         <ul>{todos}</ul>
@@ -309,14 +387,11 @@ class TodoList extends Component {
 
   // 各イベントハンドラ
   addTodo(text) {
-
-    // `setState()`で自身のstateを更新する
-    // `this.state`を直接触らない（diff/patchがうまく走らなくなって適切にrenderされなくなる）
     this.setState({
       todos: [...this.state.todos, {
         id: Date.now(),
-        text,
-        complete: false
+        complete: false,
+        text
       }]
     });
   }
@@ -344,11 +419,11 @@ class TodoList extends Component {
 
 ```javascript
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import TodoList ftom './TodoList';
 
-// 第２引数にマウント先のDOMを指定してレンダリング
-ReactDOM.render(<TodoList />, document.getElementById('root'));
+// 第2引数にマウント先のDOMを指定してレンダリング
+render(<TodoList />, document.getElementById('root'));
 // document.bodyを指定するとwarning
 ```
 
@@ -356,7 +431,7 @@ ReactDOM.render(<TodoList />, document.getElementById('root'));
 
 ```javascript
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 
 class Todo extends Component {
   render() {
@@ -397,8 +472,8 @@ class AddTodo extends Component {
 }
 
 class TodoList extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
       todos: []
@@ -422,8 +497,8 @@ class TodoList extends Component {
     this.setState({
       todos: [...this.state.todos, {
         id: Date.now(),
-        text,
-        complete: false
+        complete: false,
+        text
       }]
     });
   }
@@ -446,12 +521,12 @@ class TodoList extends Component {
   }
 }
 
-ReactDOM.render(<TodoList />, document.getElementById('root'));
+render(<TodoList />, document.getElementById('root'));
 ```
 
 --
 
-## 主なAPI、ライフサイクルメソッド
+## ライフサイクルメソッド
 
 コンポーネントの状態の変化や適切なタイミングで呼ばれる決まったメソッドがある
 
@@ -503,6 +578,8 @@ class Button extends Component {
 
 `false`だとdiff/patchが行われなくなる
 
+デフォルトは`true`
+
 無駄な計算や処理を削減しパフォーマンス向上をはかれる
 
 [http://qiita.com/koba04/items/66e9c5be8f2e31f28461#shouldcomponentupdate](http://qiita.com/koba04/items/66e9c5be8f2e31f28461#shouldcomponentupdate)
@@ -526,13 +603,14 @@ Reactとペアでよく話されるアーキテクチャのこと
 * [https://github.com/azu/material-flux](https://github.com/azu/material-flux)
 * [https://github.com/reflux/refluxjs](https://github.com/reflux/refluxjs)
 * [https://github.com/yahoo/fluxible](https://github.com/yahoo/fluxible)
+* [https://github.com/mizchi/arda](https://github.com/mizchi/arda)
 * [https://github.com/rackt/redux/](https://github.com/rackt/redux/)
 
 --
 
 Facebookが提唱したMVCアーキテクチャの改変版
 
-ただのobserverパターン（Pub Subパターン）=> NodeでいうところのEventEmitterみたいなもの
+ただのObserverパターン（Pub Subパターン）=> NodeでいうところのEventEmitterみたいなもの
 
 Reactを効率よく利用するためにFacebookが提示したもの
 
@@ -541,7 +619,9 @@ Facebookは「MVCはスケールしない」みたいに言ってるけど結局
 ※ここでいうMVCはサーバサイドMVCではなくて、Smalltalk MVCなどのGUI構築のためのMVCのこと
 
 > モデル - 問題対象としてのデータとそのデータに対する操作。
+
 > ビュー - ディスプレイを通して、モデルからユーザへ情報を提供するもの。
+
 > コントローラ - ユーザからの入力を解釈して、モデルあるいはビューに適切な調整を施すもの。
 
 [http://www.cdl.im.dendai.ac.jp/~masuda/mvc.html](http://www.cdl.im.dendai.ac.jp/~masuda/mvc.html)
@@ -562,7 +642,7 @@ Facebookは「MVCはスケールしない」みたいに言ってるけど結局
 
 主な層は
 
-* ActionCreator => Dispatcherにアクション（だいたいの場合`type`キーとそのアクションごとのデータをもったオブジェクト）を送る
+* ActionCreator => アクション（だいたいの場合`type`キーとそのアクションごとのデータをもったオブジェクト）を作ってDispatcherにを送る
 * Dispatcher => 受けたアクションをStoreの適切なところへ送る
 * Store => 送られてきたアクションを元に自身のstate（アプリケーションの状態）を更新
 * View (React) => storeをlistenしておいて、storeの更新を検知し、適宜レンダリング
@@ -572,7 +652,7 @@ Facebookは「MVCはスケールしない」みたいに言ってるけど結局
 
 --
 
-簡単なFlux実装の例
+### 簡単なFlux実装の例
 
 データの流れが一方向、というのがポイントの1つなので、それを簡単に再現
 
@@ -611,6 +691,51 @@ emitter.emit('some'); // => 'hoge'
 参考資料
 
 * [http://qiita.com/nobkz/items/75d1a9115d8aaadac433](http://qiita.com/nobkz/items/75d1a9115d8aaadac433)
+
+--
+
+## Redux
+
+* Fluxの仲間
+* 作者はFluxであってFluxではないとか言ってます
+* ヨーロッパのReact confでも作者が登壇して発表し、ヨーロッパでは一番盛り上がってる　日本だとまだあまり盛り上がってないけど
+* もうFluxこれでいいんじゃないの的な雰囲気
+
+[https://github.com/rackt/redux](https://github.com/rackt/redux)
+
+docs: [http://redux.js.org/](http://redux.js.org/)
+
+作者：
+
+[https://github.com/gaearon](https://github.com/gaearon)
+
+[https://twitter.com/dan_abramov](https://twitter.com/dan_abramov)
+
+--
+
+* シンプル
+* Hot reloading
+
+### 作った目的
+
+**そもそもの目的 Hot reloading を可能にしたい**が発端
+
+* **Hot reloading** => 開発中にコードを編集してリロードしても前の状態を維持したまま一部のコンポーネントを更新する
+
+### ディレクトリ
+
+* actions
+* components
+* reducers
+
+見通しがいい
+
+AngularのモデルレイヤーをReduxでということも可能
+
+
+参考：
+
+[http://rebuild.fm/114/](http://rebuild.fm/114/)
 
 --
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 
 class Todo extends Component {
   render() {
@@ -92,4 +92,4 @@ class TodoList extends Component {
 const rootEl = document.createElement('div');
 document.body.appendChild(rootEl);
 
-ReactDOM.render(<TodoList />, rootEl);
+render(<TodoList />, rootEl);

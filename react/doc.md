@@ -144,14 +144,14 @@ class Header extends React.Component {
 ```javascript
 render() {
   return React.createElement('header', { className: 'header' },
-          React.createElement('h1', null, this.props.title)
+           React.createElement('h1', null, this.props.title)
          );
 }
 ```
 
 [React JSFiddle](https://jsfiddle.net/reactjs/69z2wepo/)
 
-react@v0.14.0 以前では `react-tools` というツールで JS にコンパイルしてたが、現在は [Babel](https://babeljs.io/) の利用を推奨している
+react@v0.14.0 以前では `react-tools` というツールで JS にコンパイルしてたが、現在は [Babel](https://babeljs.io/) の利用を推奨している (`react-tools` の更新は止まる)
 
 Babel => ES6, ES7のトランスパイラ JSXも面倒みてくれる => 作者 Facebook に入社 => 現在18, 9歳
 
@@ -319,7 +319,7 @@ Todoコンポーネント
 ```javascript
 import React, { Component, PropTypes } from 'react';
 
-class Todo extends Component {
+export default class Todo extends Component {
 
   // 外部から受け取る`props`に対してそれぞれのバリデーションをスタティックプロパティとして定義できる
   // エラーを検出した場合エラーは投げられず、warningになるのみ
@@ -360,6 +360,7 @@ class Todo extends Component {
   handleClickDelete() {
     this.props.onClickDelete(this.props.id);
   }
+
 }
 ```
 
@@ -370,7 +371,7 @@ AddTodoボタンコンポーネント
 ```javascript
 import React, { Component } from 'react';
 
-class AddTodo extends Component {
+export default class AddTodo extends Component {
 
   static get propTypes() {
     return {
@@ -401,8 +402,9 @@ TodoListコンポーネント
 ```javascript
 import React, { Component } from 'react';
 import Todo from './Todo';
+import AddTodo from './AddTodo';
 
-class TodoList extends Component {
+export default class TodoList extends Component {
 
   constructor() {
     super();
@@ -413,8 +415,18 @@ class TodoList extends Component {
   }
 
   render() {
-    // `this.state.todos`からTodo Reactエレメントの配列をつくる
-    const todos = this.state.todos.map(todo => (
+    return (
+      <div>
+        // propsとしてAddボタンがクリックされたときのコールバックを渡す
+        <AddTodo onClickAdd={this.addTodo.bind(this)} />
+        // 配列もうまく展開してくれる
+        <ul>{this.renderTodos()}</ul>
+      </div>
+    );
+  }
+
+  renderTodos() {
+    return this.state.todos.map(todo => (
       // `key`属性に一意の値を渡す
       // 必須ではないけどwarningがでる、 diff/patch処理が遅くなる
       <Todo key={todo.id}
@@ -422,15 +434,6 @@ class TodoList extends Component {
             onClickCheckbox={this.changeComplete.bind(this)}
             {...todo} />
     ));
-
-    return (
-      <div>
-        // propsとしてAddボタンがクリックされたときのコールバックを渡す
-        <AddTodo onClickAdd={this.addTodo.bind(this)} />
-        // 配列もうまく展開してくれる
-        <ul>{todos}</ul>
-      </div>
-    );
   }
 
   // 各イベントハンドラ
@@ -460,6 +463,7 @@ class TodoList extends Component {
       })
     });
   }
+
 }
 ```
 
@@ -470,7 +474,7 @@ class TodoList extends Component {
 ```javascript
 import React from 'react';
 import { render } from 'react-dom';
-import TodoList ftom './TodoList';
+import TodoList from './TodoList';
 
 // 第2引数にマウント先のDOMを指定してレンダリング
 render(<TodoList />, document.getElementById('root'));
@@ -638,11 +642,13 @@ import { EventEmitter } from 'events';
 
 class Store extends EventEmitter {
 
-  // stateの初期化　これがアプリケーションの状態
-  // dispatcherを受け取ってそれぞれのアクションの名前にリスナを登録
   constructor(dispatcher) {
     super();
+
+    // stateの初期化　これがアプリケーションの状態
     this.state = { count: 0 };
+
+    // dispatcherを受け取ってそれぞれのアクションの名前にリスナを登録
     dispatcher.on('countup', this.onCountUp.bind(this));
     dispatcher.on('countdown', this.onCountDown.bind(this));
   }
@@ -786,99 +792,8 @@ class Counter extends Component {
 }
 
 ```
+
 --
-
-```javascript
-import React, { Component } from 'react';
-import { render } from 'react-dom';
-import { EventEmitter } from 'events';
-
-class Store extends EventEmitter {
-  constructor(dispatcher) {
-    super();
-    this.state = { count: 0 };
-    dispatcher.on('countup', this.onCountUp.bind(this));
-    dispatcher.on('countdown', this.onCountDown.bind(this));
-  }
-
-  getState() {
-    return this.state;
-  }
-
-  onCountUp(count) {
-    this.state = { count: this.state.count + count };
-    this.emit('CHANGE');
-  }
-
-  onCountDown(count) {
-    this.state = { count: this.state.count - count };
-    this.emit('CHANGE');
-  }
-}
-
-class ActionCreator {
-  constructor(dispatcher) {
-    this.dispatcher = dispatcher;
-  }
-
-  countUp(count) {
-    this.dispatcher.emit('countup', count);
-  }
-
-  countDown(count) {
-    this.dispatcher.emit('countdown', count);
-  }
-}
-
-const dispatcher = new EventEmitter()
-
-const action = new ActionCreator(dispatcher);
-const store = new Store(dispatcher);
-
-
-class Counter extends Component {
-  constructor() {
-    super();
-
-    const { count } = store.getState();
-    this.state = { count };
-
-    store.on('CHANGE', this.onChangeState.bind(this));
-  }
-
-  render() {
-    return (
-      <div>
-        <span>{this.state.count}</span>
-        <button onClick={this.handleClickUp.bind(this)}>Count up</button>
-        <button onClick={this.handleClickDown.bind(this)}>Count down</button>
-        <select defaultValue="1" ref="rate">
-          <option value="1">1</option>
-          <option value="10">10</option>
-        </select>
-      </div>
-    );
-  }
-
-  onChangeState() {
-    const { count } = store.getState();
-    this.setState({ count });
-  }
-
-  handleClickUp() {
-    action.countUp(+this.refs.rate.value);
-  }
-
-  handleClickDown() {
-    action.countDown(+this.refs.rate.value);
-  }
-}
-
-const rootEl = document.createElement('div');
-document.body.appendChild(rootEl);
-
-render(<Counter />, rootEl);
-```
 
 [https://github.com/sugarshin/study-mtg/tree/master/react/flux](https://github.com/sugarshin/study-mtg/tree/master/react/flux)
 
@@ -903,7 +818,7 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 [https://twitter.com/dan_abramov](https://twitter.com/dan_abramov)
 
-最近 Facebook ジョインしたらしい
+最近 Facebook にジョインしたらしい
 
 --
 
@@ -911,19 +826,40 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 * シンプル
 * 内部実装が読める
+* ドキュメントが電子ブック形式でチュートリアル形式でわかりやすい
 * Hot reloading
 * Reducer
 * Middleware
 
 **Redux == Reducers + Flux**
 
+ちょっと前まで人気あった Flummox という Flux 実装のフレームワークの作者が Redux 最高って言い出して、もう Flummox 更新しません、Redux 使いましょうってなって今や Redux 周りのユーティリティとか作ってる
+
 --
 
 ### 作った目的
 
-**そもそもの目的 Hot reloading を可能にしたい**が発端
+そもそもの目的は Hot reloading を簡単に可能にしたいというのが発端
 
-* **Hot reloading** => 開発中にコードを編集してリロードしても前の状態を維持したまま一部のコンポーネントを更新する
+**Hot reloading**
+
+コードを編集してリロードしても前の状態を維持したまま一部のコンポーネントを更新する
+
+例えば、モーダルが開いてる状態のときの何かをデバッグしたい
+
+コードを編集 => リロード => モーダルを開く => 確認 =>
+
+コードを編集 => リロード => モーダルを開く => 確認 =>
+
+毎回モーダルを開かないといけない（ブラウザがリロードされるの当たり前）
+
+作者はこれが許せないらしく Hot reloading 大好き
+
+これを既存の Flux 実装の中でやろうとすると難しいらしい
+
+これが Redux を作った経緯
+
+で、作ってみたらいろいろ良いところがあった
 
 --
 

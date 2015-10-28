@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 
-import timer from './timer';
-import record from './record';
+import todos from './todos';
 
-export default combineReducers({ timer, record });
+export default combineReducers({ todos });

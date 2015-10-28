@@ -400,6 +400,7 @@ TodoListコンポーネント
 
 ```javascript
 import React, { Component } from 'react';
+import Todo from './Todo';
 
 class TodoList extends Component {
 
@@ -613,9 +614,7 @@ class Button extends Component {
 
 よくやる例としては、
 
-`componentDidMount()`でコンポーネントが追加されたあとにDOMにイベントリスナを登録し、
-
-`componentWillUnmount()`でコンポーネントがDOMから削除される前にイベントリスナを解除してメモリリーク対策
+`componentDidMount()` でコンポーネントがDOMに追加されたあとにイベントリスナを登録し、 `componentWillUnmount()` でコンポーネントが DOM から削除される直前にイベントリスナを解除する、みたいなメモリリーク対策
 
 --
 
@@ -623,11 +622,11 @@ class Button extends Component {
 
 パフォーマンス対策に利用
 
-`true`か`false`を返す
+`true` か `false` を返す
 
-`false`だとdiff/patchが行われなくなる
+`false` だと diff/patch 処理が行われなくなる
 
-デフォルトは`true`
+デフォルトは　`true`
 
 無駄な計算や処理を削減しパフォーマンス向上をはかれる
 
@@ -657,15 +656,15 @@ Reactとペアでよく話されるアーキテクチャのこと
 
 --
 
-Reactを効率よく利用するためにFacebookが提唱したもの
+React を効率よく利用するために Facebook が提唱したもの
 
-MVCアーキテクチャの改変版
+MVC アーキテクチャの改変版
 
-ただのObserverパターン（Pub Subパターン）=> NodeでいうところのEventEmitterみたいなもの
+ただの Observer パターン（Pub Subパターン）=> Node でいうところの EventEmitter みたいなもの
 
-Facebookは「MVCはスケールしない」みたいに言ってるけど結局オレオレMVCみたいなものだと思う
+Facebook は「MVCはスケールしない」みたいに言ってるけど結局オレオレ MVC みたいなものだと思う
 
-※ここでいうMVCはサーバサイドMVCではなくて、Smalltalk MVCなどのGUI構築のためのMVCのこと
+※ここでいう MVC はWebサーバ等の　MVC　ではなくて、　Smalltalk MVC　など　GUI　構築のための　MVC　のこと
 
 > モデル - 問題対象としてのデータとそのデータに対する操作。
 
@@ -681,21 +680,21 @@ Facebookは「MVCはスケールしない」みたいに言ってるけど結局
 
 ![Flux](https://raw.githubusercontent.com/facebook/flux/master/docs/img/flux-diagram-white-background.png)
 
-**Fluxの最も優れている点は上記に「Flux」と名前をつけたところ**
+**Flux　の最も優れている点は上記に「Flux」と名前をつけたところ**
 
 --
 
 **データの流れは常に一方向**
 
-これによりReactと相性が良い
+これにより React と相性が良い
 
 主な層は
 
-* ActionCreator => アクション（だいたいの場合`type`キーとそのアクションごとのデータをもったオブジェクト）を作ってDispatcherにを送る
-* Dispatcher => 受けたアクションをStoreの適切なところへ送る
-* Store => 送られてきたアクションを元に自身のstate（アプリケーションの状態）を更新
-* View (React) => storeをlistenしておいて、storeの更新を検知し、適宜レンダリング
-  * DOMイベント等を通じてActionCreatorを通してアクションを生成
+* ActionCreator => アクション（だいたいの場合 `type` キーとそのアクションごとのデータをもったオブジェクト）を作って Dispatcher に送る
+* Dispatcher => 受けたアクションを Store の適切なところへ送る
+* Store => 送られてきたアクションを元に自身の state（アプリケーションの状態）を更新
+* View (React) => Store を listen しておいて、更新を検知し、適宜レンダリング
+  * DOM イベント等を通じて ActionCreator を通してアクションを生成
 
 という、一方向サイクル
 
@@ -714,12 +713,12 @@ Facebookは「MVCはスケールしない」みたいに言ってるけど結局
 ```
 [View] DOMイベント等からアクションを呼ぶ ------> [ActionCreator] 適切なアクションを作ってStoreへ通知
                                                |
-ViewはStoreを監視しておいて変更があるとレンダリング   |
+ViewはStoreを監視しておいて変更があるとレンダリング    |
   |                                            |
   ----------------------------------------- [Store] 受け取ったアクションを元に自身を更新
 ```
 
-それぞれの架け渡し的な存在がDispatcher(EventEmitter)
+それぞれの架け渡し的な存在が Dispatcher (EventEmitter)
 
 --
 
@@ -980,12 +979,12 @@ render(<Counter />, rootEl);
 
 [https://github.com/rackt/redux](https://github.com/rackt/redux)
 
-* Fluxの仲間
-* 作者はFluxであってFluxではないって言ってる
-* ヨーロッパのReactカンファレンスで作者が登壇してReduxについて発表
-* Flux実装で今一番盛り上がってる
+* Flux の仲間
+* 作者は Flux であって Flux ではないって言ってる
+* ヨーロッパの React カンファレンス2015で作者が登壇して Redux について発表
+* Flux 実装で今一番盛り上がってる
 * 日本だとまだあまり盛り上がってない
-* もうFluxこれでいいんじゃないの的な雰囲気
+* もう Flux これでいいんじゃないの的な雰囲気
 
 docs: [http://redux.js.org/](http://redux.js.org/)
 
@@ -995,10 +994,21 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 [https://twitter.com/dan_abramov](https://twitter.com/dan_abramov)
 
+最近 Facebook ジョインしたらしい
+
 --
 
+### 特長
+
 * シンプル
+* 内部実装が読める
 * Hot reloading
+* Reducer
+* Middleware
+
+**Redux == Reducers + Flux**
+
+--
 
 ### 作った目的
 
@@ -1006,18 +1016,23 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 * **Hot reloading** => 開発中にコードを編集してリロードしても前の状態を維持したまま一部のコンポーネントを更新する
 
-### ディレクトリ
+--
+
+### ディレクトリ一例
 
 * actions
 * components
 * reducers
 
-見通しがいい
+見通しがよくなる
 
 AngularのモデルレイヤーをReduxでということも可能
 
-**Redux == Reducers + Flux**
+--
 
+### デモ
+
+--
 
 参考：
 

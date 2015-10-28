@@ -22,7 +22,7 @@ style: ../slide.css
 
 [github.com/facebook/react](//github.com/facebook/react)
 
-Facebook製のライブラリでMVCでいうところのビューの部分
+Facebook 製のライブラリで MVC でいうところのビューの部分
 
 あくまでビューのライブラリであって全体のアーキテクチャを制約するものではないのでフレームワークではない
 
@@ -34,15 +34,15 @@ Facebook製のライブラリでMVCでいうところのビューの部分
 
 **JUST THE UI**
 
-* Componentを作るだけに徹している
-* よって覚えるAPIや慣例も少ない
-* ほかのフレームワークのビュー部分をReactで作るということも可能
+* Component を作るだけに徹している
+* よって覚える API や慣例も少ない
+* ほかのフレームワークのビュー部分を React で作るということも可能
 
 --
 
 **VirtualDOM**
 
-DOMと対を成すツリー上の構造体を表したデータ（JavaScriptオブジェクト）
+DOM と対を成すツリー上の構造体を表したデータ（JavaScript オブジェクト）
 
 --
 
@@ -87,7 +87,7 @@ DOMと対を成すツリー上の構造体を表したデータ（JavaScriptオ�
 
 と、
 
-それを用いたdiff/patchアルゴリズムを指す
+それを用いた diff/patch アルゴリズムを指す
 
 例えば
 
@@ -96,8 +96,6 @@ DOMと対を成すツリー上の構造体を表したデータ（JavaScriptオ�
 `document.querySelector('a.link').setAttribute('href', '/new/link')`
 
 だけが走るイメージ
-
-http://qiita.com/mizchi/items/4d25bc26def1719d52e6
 
 > HTMLとはツリー構造であり、2つのツリー構造のdiffを算出して、それをDOMにpatchするアクションを作れば、常に最小のコストで状態遷移を表現できるよね、ってのがVirtual DOMという発想のスタート地点となります。
 
@@ -117,7 +115,7 @@ http://qiita.com/mizchi/items/4d25bc26def1719d52e6
 
 データの流れは一方向（単方向バインディング）
 
-ただ、双方向バインディング（Angularとかvueとか）のように明らかにコード量が減ったりしない
+ただ、双方向バインディング（Angular とか vue とか）のように明らかにコード量が減ったりしない
 
 データの流れを一方向にすることによって考慮することは減ってわかりやすくなる
 
@@ -125,14 +123,14 @@ http://qiita.com/mizchi/items/4d25bc26def1719d52e6
 
 ### JSX
 
-JSXというJavaScript中にXML的なもの書けてHTMLを表現できる
+JSX という JavaScript 中に XML 的なものを書けて HTML を表現できる
 
 ```javascript
 class Header extends React.Component {
 
   render() {
     return (
-      <header>
+      <header className="header">
         <h1>{this.props.title}</h1>
       </header>
     );
@@ -141,11 +139,21 @@ class Header extends React.Component {
 }
 ```
 
+`render()` の部分はこうコンパイルされる
+
+```javascript
+render() {
+  return React.createElement('header', { className: 'header' },
+          React.createElement('h1', null, this.props.title)
+         );
+}
+```
+
 [React JSFiddle](https://jsfiddle.net/reactjs/69z2wepo/)
 
-react@v0.14.0以前では`react-tools`というツールでJSにコンパイルしてたが、現在は[Babel](https://babeljs.io/)の利用を推奨している
+react@v0.14.0 以前では `react-tools` というツールで JS にコンパイルしてたが、現在は [Babel](https://babeljs.io/) の利用を推奨している
 
-Babel => ES6, ES7のトランスパイラ JSXも面倒みてくれる => 作者Facebookに入社 => 現在18, 9歳
+Babel => ES6, ES7のトランスパイラ JSXも面倒みてくれる => 作者 Facebook に入社 => 現在18, 9歳
 
 ES6について：
 
@@ -155,13 +163,15 @@ ES6について：
 
 ### サーバサイドレンダリング
 
-`react-dom`にReactエレメントを文字列にして返すメソッド有
+`react-dom` に React コンポーネントを文字列にして返すメソッドがある
 
-`require('react-dom/server').renderToString()`
+**`require('react-dom/server').renderToString()`**
 
-JSの評価エンジンさえあればサーバ側でレンダリングしてhtml文字列としてクライアントに返せる
+`require('react-dom/server').renderToStaticMarkup()` というのもあるけど、これは純粋な html 文字列が返される（React エレメントとして必要な data 属性等を含まない）
 
-なので初回アクセス時はサーバでレンダリング済みのhtmlを返して、みたいなことができるのでSEO的にも、SPAの問題としてよくあがる初回表示の遅さもなんとかなる
+JS　の評価エンジンさえあればサーバ側でレンダリングして　html　文字列としてクライアントに返せる
+
+なので初回アクセス時はサーバでレンダリング済みの　html　を返して、みたいなことができるので　SEO　的にも、　SPA　の問題としてよくあがる初回表示の遅さもなんとかなる
 
 --
 
@@ -189,11 +199,11 @@ render(<Hello name="world" />, document.getElementById('root'));
 
 [http://codepen.io/sugarshin/pen/wKmPry](http://codepen.io/sugarshin/pen/wKmPry)
 
-`React.createClass()`に`render`メソッドをもつオブジェクトを渡すことでも作成できる
+`React.createClass()` に `render` メソッドをもつオブジェクトを渡すことでも作成できる
 
 --
 
-Componentのビューとロジックの密結合について
+Component のビューとロジックの密結合について
 
 [http://qiita.com/koba04/items/4f874e0da8ebd7329701](http://qiita.com/koba04/items/4f874e0da8ebd7329701)
 
@@ -222,14 +232,14 @@ class Counter extends Component {
     super();
 
     // 初期state（状態）をここで定義
-    // `React.createClass` でやる場合の `getInitialState` と同じ
+    // `React.createClass()` でコンポーネントを作る場合の `getInitialState()` と同じ
     this.state = {
       count: 0
     };
   }
 
   render() {
-    // 必ず1つのコンポーネント（html）を返す
+    // 必ず1つのコンポーネント（html）を返すようにする
     return (
       <div>
         // `{}` はJavaScriptの式として評価してくれる
@@ -260,24 +270,27 @@ render(<Counter />, document.getElementById('root'));
 --
 
 * 1つのコンポーネントを返す
-* `state`で自身の状態を保持できる
-* `setState()`で`state`を更新すると`render()`が走ってレンダリングしてくれる
-* `props`で外部とやりとりもできる
+* `state` で自身の状態を保持できる
+* `setState()` で `state` を更新すると `render()` が走ってレンダリングしてくれる
+* `props` で外部とやりとりもできる
 
 --
 
 ### Stateless Component
 
-react@v0.14 からstateを持たない、propsだけに依存するようなコンポーネントの新しい定義の仕方ができるようになった
+react@v0.14 から `state` を持たない、 `props` だけに依存するようなコンポーネントの新しい定義の仕方ができるようになった
 
 ```javascript
+import React, { PropTypes } from 'react';
+
 // コンポーネントを返すだけの関数として定義
-// 引数にpropsが渡ってくる
+// 引数に props が渡ってくる
 export default function Footer(props) {
   return <footer>{props.copyright}</footer>;
 }
 
-// propTypesやdefaultPropsも定義できる
+// propTypesやdefaultPropsも
+// 関数のプロパティとして定義できる
 Footer.propTypes = {
   copyright: PropTypes.string.isRequired
 };
@@ -285,9 +298,7 @@ Footer.propTypes = {
 
 ライフサイクルメソッドは利用できない
 
-react@v0.15はパフォーマンス改善等のリリースのようで、
-
-このStateless Componentの書き方で書いておくとパフォーマンスの支援を受けられる
+react@v0.15 ではパフォーマンス改善等のリリースになるようで、この Stateless Component の書き方で書いておくとパフォーマンスの支援を受けられる
 
 今後はこの方法を主に使っていくことになると思う
 

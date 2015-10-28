@@ -1,0 +1,21 @@
+{
+  "name": "redux-with-react",
+  "description": "redux-with-react",
+  "scripts": {
+    "start": "budo index.js -ol -- -t [ babelify --stage 1 ] --extension='.jsx' | garnish"
+  },
+  "devDependencies": {
+    "budo": "^5.1.5",
+    "garnish": "^3.2.1",
+    "watchify": "^3.5.0"
+  },
+  "dependencies": {
+    "parse-ms": "^1.0.0",
+    "react": "^0.14.0",
+    "react-dom": "^0.14.0",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4",
+    "redux-logger": "^2.0.4",
+    "redux-thunk": "^1.0.0"
+  }
+}

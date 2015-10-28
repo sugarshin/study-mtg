@@ -1,8 +1,8 @@
 {
-  "name": "react-todo-demo",
-  "description": "react-todo-demo",
+  "name": "react-todo",
+  "description": "react-todo",
   "scripts": {
-    "start": "budo main.js -ol -- -t [ babelify --stage 1 ] --extension='.jsx' | garnish"
+    "start": "budo index.js -ol -- -t [ babelify --stage 1 ] --extension='.jsx' | garnish"
   },
   "devDependencies": {
     "babelify": "^6.4.0",

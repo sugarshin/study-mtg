@@ -169,9 +169,9 @@ ES6について：
 
 `require('react-dom/server').renderToStaticMarkup()` というのもあるけど、これは純粋な html 文字列が返される（React エレメントとして必要な data 属性等を含まない）
 
-JS　の評価エンジンさえあればサーバ側でレンダリングして　html　文字列としてクライアントに返せる
+JS の評価エンジンさえあればサーバ側でレンダリングして html 文字列としてクライアントに返せる
 
-なので初回アクセス時はサーバでレンダリング済みの　html　を返して、みたいなことができるので　SEO　的にも、　SPA　の問題としてよくあがる初回表示の遅さもなんとかなる
+なので初回アクセス時はサーバでレンダリング済みの html を返して、みたいなことができるので SEO 的にも、 SPA の問題としてよくあがる初回表示の遅さもなんとかなる
 
 --
 
@@ -626,7 +626,7 @@ class Button extends Component {
 
 `false` だと diff/patch 処理が行われなくなる
 
-デフォルトは　`true`
+デフォルトは `true`
 
 無駄な計算や処理を削減しパフォーマンス向上をはかれる
 
@@ -664,7 +664,7 @@ MVC アーキテクチャの改変版
 
 Facebook は「MVCはスケールしない」みたいに言ってるけど結局オレオレ MVC みたいなものだと思う
 
-※ここでいう MVC はWebサーバ等の　MVC　ではなくて、　Smalltalk MVC　など　GUI　構築のための　MVC　のこと
+※ここでいう MVC はWebサーバ等の MVC ではなくて、 Smalltalk MVC など GUI 構築のための MVC のこと
 
 > モデル - 問題対象としてのデータとそのデータに対する操作。
 
@@ -713,7 +713,7 @@ Facebook は「MVCはスケールしない」みたいに言ってるけど結�
 ```
 [View] DOMイベント等からアクションを呼ぶ ------> [ActionCreator] 適切なアクションを作ってStoreへ通知
                                                |
-ViewはStoreを監視しておいて変更があるとレンダリング    |
+ViewはStoreを監視しておいて変更があるとレンダリング     |
   |                                            |
   ----------------------------------------- [Store] 受け取ったアクションを元に自身を更新
 ```
@@ -841,7 +841,7 @@ class Counter extends Component {
     const { count } = store.getState();
     this.state = { count };
 
-    // `store`が更新されたとき（'CHNANGE'イベントがemitされたとき）のコールバックをここで登録
+    // `store`が更新されたとき（'CHANGE'イベントがemitされたとき）のコールバックをここで登録
     store.on('CHANGE', this.onChangeState.bind(this));
   }
 

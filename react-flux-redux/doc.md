@@ -921,25 +921,27 @@ const initialState = {};
 export default function someReducer(state = initialState, action) {
   switch (action.type) {
 
-    case types.SOME_ACTION:
-      return Object.assign({}, state, 'new some state');
+  case types.SOME_ACTION:
+    return Object.assign({}, state, 'new some state');
 
-    case types.OTHER_ACTION:
-      return Object.assign({}, state, 'new other state');
+  case types.OTHER_ACTION:
+    return Object.assign({}, state, 'new other state');
 
-    default:
-      return state;
+  default:
+    return state;
 
   }
 }
 ```
+
+名前の由来
 
 Array#reduce
 
 ```javascript
 const array = [1, 3, 6, 8];
 
-array.reduce((current, prev) => current + prev); // => 18
+array.reduce((prev, current) => prev + current); // => 18
 ```
 
 --

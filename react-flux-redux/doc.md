@@ -692,8 +692,8 @@ class Store extends EventEmitter {
     this.state = { count: 0 };
 
     // dispatcherを受け取ってそれぞれのアクションの名前にリスナを登録
-    dispatcher.on('countup', this.onCountUp.bind(this));
-    dispatcher.on('countdown', this.onCountDown.bind(this));
+    dispatcher.on('countup', ::this.onCountUp);
+    dispatcher.on('countdown', ::this.onCountDown);
   }
 
   // 外部からstateにアクセスできるようにしておく
@@ -800,15 +800,15 @@ class Counter extends Component {
     this.state = { count };
 
     // `store`が更新されたとき（'CHANGE'イベントがemitされたとき）のコールバックをここで登録
-    store.on('CHANGE', this.onChangeState.bind(this));
+    store.on('CHANGE', ::this.onChangeState);
   }
 
   render() {
     return (
       <div>
         <span>{this.state.count}</span>
-        <button onClick={this.handleClickUp.bind(this)}>Count up</button>
-        <button onClick={this.handleClickDown.bind(this)}>Count down</button>
+        <button onClick={::this.handleClickUp}>Count up</button>
+        <button onClick={::this.handleClickDown}>Count down</button>
         <select defaultValue="1" ref="rate">
           <option value="1">1</option>
           <option value="10">10</option>
@@ -917,7 +917,7 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 * `combineReducers`
   * 複数の`reducer`を結合して1つにする
 * `bindActionCreators`
-  * `react-redux`などなにかしらのview層とbindしてくれる (dispatch(someAction())みたいにしてくれる)
+  * `react-redux` 利用時などなにかしらのview層でreducerに送るようにしてくれる (dispatch(someAction())みたいにしてくれる)
 * `applyMiddleware`
   * Middlewareの適用
 * `compose`

@@ -220,7 +220,7 @@ Component のビューとロジックの密結合について
 
 [http://codepen.io/sugarshin/pen/RWMmQX](http://codepen.io/sugarshin/pen/RWMmQX)
 
-[https://github.com/sugarshin/study-mtg/tree/master/react/counter](https://github.com/sugarshin/study-mtg/tree/master/react/counter)
+[https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/counter](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/counter)
 
 ```javascript
 import React, { Component } from 'react';
@@ -310,7 +310,7 @@ react@v0.15 ではパフォーマンス改善等のリリースになるよう�
 
 [http://codepen.io/sugarshin/pen/dYmZgN](http://codepen.io/sugarshin/pen/dYmZgN)
 
-[https://github.com/sugarshin/study-mtg/tree/master/react/todo](https://github.com/sugarshin/study-mtg/tree/master/react/todo)
+[https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/todo](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/todo)
 
 --
 
@@ -518,7 +518,7 @@ render(<App />, document.getElementById('root'));
 
 [http://codepen.io/sugarshin/pen/dYmZgN](http://codepen.io/sugarshin/pen/dYmZgN)
 
-[https://github.com/sugarshin/study-mtg/tree/master/react/todo](https://github.com/sugarshin/study-mtg/tree/master/react/todo)
+[https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/todo](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/todo)
 
 --
 
@@ -828,7 +828,7 @@ class Counter extends Component {
 
 --
 
-[https://github.com/sugarshin/study-mtg/tree/master/react/flux](https://github.com/sugarshin/study-mtg/tree/master/react/flux)
+[https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/flux](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/flux)
 
 --
 
@@ -884,7 +884,7 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 コードを編集 => リロード => モーダルを開く => 確認 =>
 
-毎回モーダルを開かないといけない（ブラウザがリロードされるの当たり前）
+毎回モーダルを開かないといけない（リロードされるので当たり前）
 
 作者はこれが許せないらしく Hot reloading 大好き
 
@@ -902,13 +902,11 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 * components
 * reducers
 
-見通しがよくなる
-
-AngularのモデルレイヤーをReduxでということも可能
-
 --
 
 ### デモ
+
+[https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/redux-with-react](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/redux-with-react)
 
 --
 

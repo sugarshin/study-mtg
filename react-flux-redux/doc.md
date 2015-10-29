@@ -870,6 +870,7 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 * Hot reloading
 * Reducer
 * Middleware
+* Action や Reducer (Store的な部分)が純粋な関数なのでテストもしやすい
 
 **Redux == Reducers + Flux**
 

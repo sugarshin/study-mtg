@@ -5,6 +5,7 @@
     "demo:counter": "budo counter/index.js -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish",
     "demo:todo": "budo todo/index.js -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish",
     "demo:flux": "budo flux/index.js -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish",
+    "demo:redux-without-react": "budo redux-without-react/counter.js -d redux-without-react -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish",
     "demo:redux-with-react": "budo redux-with-react/index.js -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish"
   },
   "devDependencies": {

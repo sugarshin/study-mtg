@@ -586,25 +586,17 @@ Reactとペアでよく話されるアーキテクチャのこと
 
 実装ではなくあくまでアーキテクチャの話
 
-なのでオレオレFlux乱立
+[http://facebook.github.io/flux/](http://facebook.github.io/flux/)
 
---
+一応謹製の実装もある
 
-各種実装
-
-* [https://github.com/facebook/flux](https://github.com/facebook/flux)
-* [https://github.com/BinaryMuse/fluxxor](https://github.com/BinaryMuse/fluxxor)
-* [https://github.com/azu/material-flux](https://github.com/azu/material-flux)
-* [https://github.com/reflux/refluxjs](https://github.com/reflux/refluxjs)
-* [https://github.com/yahoo/fluxible](https://github.com/yahoo/fluxible)
-* [https://github.com/mizchi/arda](https://github.com/mizchi/arda)
-* [https://github.com/rackt/redux/](https://github.com/rackt/redux/)
+[https://github.com/facebook/flux](https://github.com/facebook/flux)
 
 --
 
 React を効率よく利用するために Facebook が提唱したもの
 
-MVC アーキテクチャの改変版
+MVC アーキテクチャの改変版的な
 
 ただの Observer パターン（Pub Subパターン）=> Node でいうところの EventEmitter みたいなもの
 
@@ -627,6 +619,20 @@ Facebook は「MVCはスケールしない」みたいに言ってるけど結�
 ![Flux](https://raw.githubusercontent.com/facebook/flux/master/docs/img/flux-diagram-white-background.png)
 
 **Flux　の最も優れている点は上記に「Flux」と名前をつけたところ**
+
+--
+
+オレオレFlux乱立
+
+各種実装
+
+* [https://github.com/facebook/flux](https://github.com/facebook/flux)
+* [https://github.com/BinaryMuse/fluxxor](https://github.com/BinaryMuse/fluxxor)
+* [https://github.com/azu/material-flux](https://github.com/azu/material-flux)
+* [https://github.com/reflux/refluxjs](https://github.com/reflux/refluxjs)
+* [https://github.com/yahoo/fluxible](https://github.com/yahoo/fluxible)
+* [https://github.com/mizchi/arda](https://github.com/mizchi/arda)
+* [https://github.com/rackt/redux/](https://github.com/rackt/redux/)
 
 --
 
@@ -668,7 +674,7 @@ ViewはStoreを監視しておいて変更があるとレンダリング      |
 
 --
 
-まずはStore層をつくる
+Store層
 
 ```javascript
 import { EventEmitter } from 'events';
@@ -838,10 +844,11 @@ class Counter extends Component {
 
 * Flux の仲間
 * 作者は Flux であって Flux ではないって言ってる
-* ヨーロッパの React カンファレンス2015で作者が登壇して Redux について発表
+* ヨーロッパの React カンファレンス2015で作者が登壇して Redux について発表 [https://www.youtube.com/watch?v=xsSnOQynTHs](https://www.youtube.com/watch?v=xsSnOQynTHs)
 * Flux 実装で今一番盛り上がってる
-* 日本だとまだあまり盛り上がってない
+* 日本だとまだあまり盛り上がってないかも
 * もう Flux これでいいんじゃないの的な雰囲気
+* 少なくてもぼくはこれ使っていこうと思ってます
 
 docs: [http://redux.js.org/](http://redux.js.org/)
 
@@ -904,7 +911,50 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 --
 
+### Reducer
+
+```javascript
+import * as types from './constants/ActionTypes';
+
+const initialState = {};
+
+export default function someReducer(state = initialState, action) {
+  switch (action.type) {
+
+    case types.SOME_ACTION:
+      return Object.assign({}, state, 'new some state');
+
+    case types.OTHER_ACTION:
+      return Object.assign({}, state, 'new other state');
+
+    default:
+      return state;
+
+  }
+}
+```
+
+Array#reduce
+
+```javascript
+const array = [1, 3, 6, 8];
+
+array.reduce((current, prev) => current + prev); // => 18
+```
+
+--
+
 ### デモ
+
+Redux without React
+
+Conter
+
+[https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/redux-without-react](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/redux-without-react)
+
+Redux with React
+
+Todo
 
 [https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/redux-with-react](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/redux-with-react)
 

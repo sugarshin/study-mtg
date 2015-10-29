@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { render } from 'react-dom'
+import React, { Component } from 'react';
+import { render } from 'react-dom';
 import { EventEmitter } from 'events';
 
 // Store
@@ -13,8 +13,8 @@ class Store extends EventEmitter {
 
     // dispatcherを受け取って
     // それぞれのアクションの名前にリスナを登録
-    dispatcher.on('countup', this.onCountUp.bind(this));
-    dispatcher.on('countdown', this.onCountDown.bind(this));
+    dispatcher.on('countup', ::this.onCountUp);
+    dispatcher.on('countdown', ::this.onCountDown);
   }
 
   // 外部からstateにアクセスできるようにしておく
@@ -58,7 +58,7 @@ class ActionCreator {
 }
 
 // Dispatcher
-const dispatcher = new EventEmitter()
+const dispatcher = new EventEmitter();
 
 const action = new ActionCreator(dispatcher);
 const store = new Store(dispatcher);
@@ -73,15 +73,15 @@ class Counter extends Component {
     const { count } = store.getState();
     this.state = { count };
 
-    store.on('CHANGE', this.onChangeState.bind(this));
+    store.on('CHANGE', ::this.onChangeState);
   }
 
   render() {
     return (
       <div>
         <span>{this.state.count}</span>
-        <button onClick={this.handleClickUp.bind(this)}>Count up</button>
-        <button onClick={this.handleClickDown.bind(this)}>Count down</button>
+        <button onClick={::this.handleClickUp}>Count up</button>
+        <button onClick={::this.handleClickDown}>Count down</button>
         <select defaultValue="1" ref="rate">
           <option value="1">1</option>
           <option value="10">10</option>

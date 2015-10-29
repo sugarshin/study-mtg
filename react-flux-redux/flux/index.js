@@ -5,12 +5,14 @@ import { EventEmitter } from 'events';
 // Store
 class Store extends EventEmitter {
 
-  // stateの初期化
-  // dispatcherを受け取って
-  // それぞれのアクションの名前にリスナを登録
   constructor(dispatcher) {
     super();
+
+    // stateの初期化
     this.state = { count: 0 };
+
+    // dispatcherを受け取って
+    // それぞれのアクションの名前にリスナを登録
     dispatcher.on('countup', this.onCountUp.bind(this));
     dispatcher.on('countdown', this.onCountDown.bind(this));
   }

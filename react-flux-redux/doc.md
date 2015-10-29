@@ -245,8 +245,8 @@ class Counter extends Component {
         // `{}` はJavaScriptの式として評価してくれる
         <span>{this.state.count}</span>
         // DOMのイベントは 'on + イベント名' でハンドリングする
-        <button onClick={this.handleClickUp.bind(this)}>Count up</button>
-        <button onClick={this.handleClickDown.bind(this)}>Count down</button>
+        <button onClick={::this.handleClickUp}>Count up</button>
+        <button onClick={::this.handleClickDown}>Count down</button>
       </div>
     );
   }
@@ -322,17 +322,15 @@ import React, { Component, PropTypes } from 'react';
 export default class Todo extends Component {
 
   // 外部から受け取る`props`に対してそれぞれのバリデーションをスタティックプロパティとして定義できる
-  // エラーを検出した場合エラーは投げられず、warningになるのみ
+  // エラーは投げられず、warningになるのみ
   // しかもproduction環境では無視される
-  static get propTypes() {
-    return {
-      id: PropTypes.number.isRequired,
-      text: PropTypes.string.isRequired,
-      complete: PropTypes.bool.isRequired,
-      onClickCheckbox: PropTypes.func.isRequired,
-      onClickDelete: PropTypes.func.isRequired
-    };
-  }
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    complete: PropTypes.bool.isRequired,
+    onClickCheckbox: PropTypes.func.isRequired,
+    onClickDelete: PropTypes.func.isRequired
+  };
 
   render() {
     const { complete, text } = this.props;
@@ -345,9 +343,9 @@ export default class Todo extends Component {
         textDecoration: complete ? 'line-through' : 'none'
       }}>
         // 各DOMのイベントは `on + イベント名` みたいは感じでハンドリングする
-        <input type="checkbox" checked={complete} onChange={this.handleClickCheckbox.bind(this)} />
+        <input type="checkbox" checked={complete} onChange={::this.handleClickCheckbox} />
         <span>{text}</span>
-        <button onClick={this.handleClickDelete.bind(this)}>Delete</button>
+        <button onClick={::this.handleClickDelete}>Delete</button>
       </div>
     );
   }
@@ -373,18 +371,16 @@ import React, { Component } from 'react';
 
 export default class AddTodo extends Component {
 
-  static get propTypes() {
-    return {
-      onClickAdd: PropTypes.func.isRequired
-    };
-  }
+  static propTypes = {
+    onClickAdd: PropTypes.func.isRequired
+  };
 
   render() {
     return (
       <div>
         // `ref` 属性を指定しておくと同コンポーネントから`this.refs[名前]`で参照できる
         <input type="text" ref="input" placeholder="Todo name" />
-        <button onClick={this.handleClickButtonAdd.bind(this)}>Add</button>
+        <button onClick={::this.handleClickButtonAdd}>Add</button>
       </div>
     );
   }
@@ -400,15 +396,63 @@ export default class AddTodo extends Component {
 TodoListコンポーネント
 
 ```javascript
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import Todo from './Todo';
-import AddTodo from './AddTodo';
 
 export default class TodoList extends Component {
+
+  static propTypes = {
+    todos: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.number,
+      text: PropTypes.string,
+      complete: PropTypes.bool
+    })).isRequired,
+    onClickDelete: PropTypes.func.isRequired,
+    onClickCheckbox: PropTypes.func.isRequired
+  };
+
+  render() {
+    return (
+      // 配列もうまく展開してくれる
+      <div>{this.renderTodos()}</div>
+    );
+  }
+
+  renderTodos() {
+    const { onClickDelete, onClickCheckbox } = this.props;
+    return this.props.todos.map(todo => (
+      // `key`属性に一意の値を渡す
+      // 必須ではないけどwarningがでる、 diff/patch処理が遅くなる
+      <Todo key={todo.id}
+            onClickDelete={onClickDelete}
+            onClickCheckbox={onClickCheckbox}
+            {...todo} />
+    ));
+  }
+
+}
+```
+
+--
+
+Appコンポーネント
+
+全体をラップしてstateを保持し、子コンポーネントに流す
+
+状態を変更する関数も渡す
+
+```javascript
+import React, { Component } from 'react';
+
+import TodoList from './TodoList';
+import AddTodo from './AddTodo';
+
+export default class App extends Component {
 
   constructor() {
     super();
 
+    // 初期state
     this.state = {
       todos: []
     };
@@ -417,26 +461,15 @@ export default class TodoList extends Component {
   render() {
     return (
       <div>
-        // propsとしてAddボタンがクリックされたときのコールバックを渡す
-        <AddTodo onClickAdd={this.addTodo.bind(this)} />
-        // 配列もうまく展開してくれる
-        <ul>{this.renderTodos()}</ul>
+        // propsとして各 DOM イベントのコールバックを渡す
+        <AddTodo onClickAdd={::this.addTodo} />
+        <TodoList todos={this.state.todos}
+                  onClickDelete={::this.deleteTodo}
+                  onClickCheckbox={::this.changeComplete} />
       </div>
     );
   }
 
-  renderTodos() {
-    return this.state.todos.map(todo => (
-      // `key`属性に一意の値を渡す
-      // 必須ではないけどwarningがでる、 diff/patch処理が遅くなる
-      <Todo key={todo.id}
-            onClickDelete={this.deleteTodo.bind(this)}
-            onClickCheckbox={this.changeComplete.bind(this)}
-            {...todo} />
-    ));
-  }
-
-  // 各イベントハンドラ
   addTodo(text) {
     this.setState({
       todos: [...this.state.todos, {
@@ -474,11 +507,11 @@ export default class TodoList extends Component {
 ```javascript
 import React from 'react';
 import { render } from 'react-dom';
-import TodoList from './TodoList';
+import App from './App';
 
-// 第2引数にマウント先のDOMを指定してレンダリング
-render(<TodoList />, document.getElementById('root'));
-// document.bodyを指定するとwarning
+// 第2引数にマウント先のDOMを指定
+render(<App />, document.getElementById('root'));
+// document.bodyを指定するとwarningでるようになった
 ```
 
 --
@@ -626,7 +659,7 @@ Facebook は「MVCはスケールしない」みたいに言ってるけど結�
 ```
 [View] DOMイベント等からアクションを呼ぶ ------> [ActionCreator] 適切なアクションを作ってStoreへ通知
                                                |
-ViewはStoreを監視しておいて変更があるとレンダリング     |
+ViewはStoreを監視しておいて変更があるとレンダリング      |
   |                                            |
   ----------------------------------------- [Store] 受け取ったアクションを元に自身を更新
 ```

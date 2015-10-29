@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import parseMs from 'parse-ms';
 
-import Timer from '../components/Timer';
+import TodoList from '../../todo/TodoList';
+import AddTodo from '../../todo/AddTodo';
 import * as actions from '../actions';
 
 const mapStateToProps = state => {
@@ -18,13 +18,18 @@ const mapDispatchToProps = dispatch => {
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class App extends Component {
+
   render() {
-    const { time, records } = this.props;
+    const { todos, actions } = this.props;
 
     return (
       <div className="app">
-        <Timer { ...parseMs(time) } />
+        <AddTodo onClickAdd={actions.addTodo} />
+        <TodoList todos={todos}
+                  onClickDelete={actions.deleteTodo}
+                  onClickCheckbox={actions.changeComplete} />
       </div>
     );
   }
+
 }

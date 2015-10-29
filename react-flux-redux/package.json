@@ -1,0 +1,21 @@
+{
+  "name": "react-flux-redux",
+  "description": "react-flux-redux",
+  "scripts": {
+    "demo:counter": "budo counter/index.js -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish",
+    "demo:todo": "budo todo/index.js -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish",
+    "demo:flux": "budo flux/index.js -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish",
+    "demo:redux-with-react": "budo redux-with-react/index.js -ol -- -t [ babelify --stage 0 ] --extension='.jsx' | garnish"
+  },
+  "devDependencies": {
+    "babelify": "^6.4.0",
+    "budo": "^5.1.5",
+    "garnish": "^3.2.1"
+  },
+  "dependencies": {
+    "react": "0.14.1",
+    "react-dom": "0.14.1",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4"
+  }
+}

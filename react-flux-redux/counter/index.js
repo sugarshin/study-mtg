@@ -15,8 +15,8 @@ class Counter extends Component {
     return (
       <div>
         <span>{this.state.count}</span>
-        <button onClick={this.handleClickUp.bind(this)}>Count up</button>
-        <button onClick={this.handleClickDown.bind(this)}>Count down</button>
+        <button onClick={::this.handleClickUp}>Count up</button>
+        <button onClick={::this.handleClickDown}>Count down</button>
       </div>
     );
   }

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Todo from './Todo';
+
+import TodoList from './TodoList';
 import AddTodo from './AddTodo';
 
-export default class TodoList extends Component {
+export default class App extends Component {
 
   constructor(props) {
     super(props);
@@ -15,19 +16,12 @@ export default class TodoList extends Component {
   render() {
     return (
       <div>
-        <AddTodo onClickAdd={this.addTodo.bind(this)} />
-        <ul>{this.renderTodos()}</ul>
+        <AddTodo onClickAdd={::this.addTodo} />
+        <TodoList todos={this.state.todos}
+                  onClickDelete={::this.deleteTodo}
+                  onClickCheckbox={::this.changeComplete} />
       </div>
     );
-  }
-
-  renderTodos() {
-    return this.state.todos.map(todo => (
-      <Todo key={todo.id}
-            onClickDelete={this.deleteTodo.bind(this)}
-            onClickCheckbox={this.changeComplete.bind(this)}
-            {...todo} />
-    ));
   }
 
   addTodo(text) {

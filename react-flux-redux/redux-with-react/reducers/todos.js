@@ -1,4 +1,4 @@
-import { ADD_TODO, COMPLETE_TODO, DELETE_TODO } from '../actions';
+import { ADD_TODO, CHANGE_COMPLETE, DELETE_TODO } from '../actions';
 
 const initialState = {
   todos: []
@@ -9,7 +9,11 @@ export default function todos(state = initialState, action) {
 
   case ADD_TODO:
     return Object.assign({}, state, {
-      todos: [...state.todos, action.todo]
+      todos: [...state.todos, {
+        id: Date.now(),
+        complete: false,
+        text: action.text
+      }]
     });
 
   case DELETE_TODO:
@@ -17,7 +21,7 @@ export default function todos(state = initialState, action) {
       todos: state.todos.filter(todo => todo.id !== action.id)
     });
 
-  case COMPLETE_TODO:
+  case CHANGE_COMPLETE:
     return Object.assign({}, state, {
       todos: state.todos.map(todo => {
         if (todo.id === action.id) {

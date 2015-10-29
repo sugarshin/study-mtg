@@ -2,15 +2,13 @@ import React, { Component, PropTypes } from 'react';
 
 export default class Todo extends Component {
 
-  static get propTypes() {
-    return {
-      id: PropTypes.number.isRequired,
-      text: PropTypes.string.isRequired,
-      complete: PropTypes.bool.isRequired,
-      onClickCheckbox: PropTypes.func.isRequired,
-      onClickDelete: PropTypes.func.isRequired
-    };
-  }
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    complete: PropTypes.bool.isRequired,
+    onClickCheckbox: PropTypes.func.isRequired,
+    onClickDelete: PropTypes.func.isRequired
+  };
 
   render() {
     const { complete, text } = this.props;
@@ -20,9 +18,9 @@ export default class Todo extends Component {
         opacity: complete ? .5 : 1,
         textDecoration: complete ? 'line-through' : 'none'
       }}>
-        <input type="checkbox" checked={complete} onChange={this.handleClickCheckbox.bind(this)} />
+        <input type="checkbox" checked={complete} onChange={::this.handleClickCheckbox} />
         <span>{text}</span>
-        <button onClick={this.handleClickDelete.bind(this)}>Delete</button>
+        <button onClick={::this.handleClickDelete}>Delete</button>
       </div>
     );
   }

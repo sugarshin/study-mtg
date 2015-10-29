@@ -21,3 +21,7 @@ blockquote {
   border-left: 3px solid;
   padding-left: 1em;
 }
+
+.controls {
+  display: none;
+}

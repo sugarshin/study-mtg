@@ -153,11 +153,15 @@ render() {
 
 react@v0.14.0 以前では `react-tools` というツールで JS にコンパイルしてたが、現在は [Babel](https://babeljs.io/) の利用を推奨している (`react-tools` の更新は止まる)
 
-Babel => ES6, ES7のトランスパイラ JSXも面倒みてくれる => 作者 Facebook に入社 => 現在18, 9歳
+Babel => ES6, ES7のトランスパイラ JSXも面倒みてくれる
 
-ES6について：
+ES6について： [https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md](https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md)
 
-[https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md](https://github.com/sugarshin/study-mtg/blob/master/es6/doc.md)
+作者： [@sebmck](https://github.com/sebmck)
+
+Facebook に入社 => 現在18, 9歳
+
+react-europe 2015 で Babel について登壇 @sebmck [https://www.youtube.com/watch?v=OFuDvqZmUrE](https://www.youtube.com/watch?v=OFuDvqZmUrE)
 
 --
 
@@ -864,8 +868,8 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 ### 特長
 
-* シンプル
-* 内部実装が読める
+* １つのオブジェクトでアプリケーション全体の状態を管理する
+* シンプル 内部実装が読める
 * ドキュメントが電子ブック形式でチュートリアル形式でわかりやすい
 * Hot reloading
 * Reducer
@@ -904,21 +908,71 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 
 --
 
-### ディレクトリ一例
+### API
 
-* actions
-* components
-* reducers
+5つのみ
+
+* `createStore`
+  * `reducer` を受け取ってstoreを作る
+* `combineReducers`
+  * 複数の`reducer`を結合して1つにする
+* `bindActionCreators`
+  * `react-redux`などなにかしらのview層とbindしてくれる (dispatch(someAction())みたいにしてくれる)
+* `applyMiddleware`
+  * Middlewareの適用
+* `compose`
+  * ユーティリティ Middlewareを適用したcreateStoreを作る際などに利用
+
+```javascript
+const result = func1(func2(func3(arg)));
+
+// ↓
+
+const result = compose(func1, func2, func3)(arg);
+```
+
+--
+
+### Action Creator
+
+```javascript
+// 一意な値をアクションごとに紐付ける (Action Type)
+// Reducer側でこの値を元にどうやってstate更新するか決める
+export const ADD_TODO = 'ADD_TODO';
+
+// `type` とそのアクションごとのデータを持ったオブジェクトを返すだけの純粋な関数
+export function addTodo(text) {
+  return { type: ADD_TODO, text };
+}
+```
+
+API叩くのもここ
+
+非同期処理用のMiddleware使う
+
+[redux-thunk](https://github.com/gaearon/redux-thunk)
+
+[redux-promise](https://github.com/acdlite/redux-promise)
 
 --
 
 ### Reducer
 
+アクションを受け取って現在のstateをどう変更するか
+
+受け取ったアクションの `type` によってどう変化させるか計算して、
+変化させるなら必ず新しいオブジェクトの参照を返す
+これによって View に変更ｈが通知される
+
 ```javascript
+// 必要なAction typeをimport
 import * as types from './constants/ActionTypes';
 
 const initialState = {};
 
+// 初期stateは第1引数にデフォルト引数として渡す
+// 渡ってきたactionで現在のstateをどう変化させるか、またはさせないかを計算して
+// させる場合は新しくオブジェクトを作成して返す
 export default function someReducer(state = initialState, action) {
   switch (action.type) {
 
@@ -944,6 +998,25 @@ const array = [1, 3, 6, 8];
 
 array.reduce((prev, current) => prev + current); // => 18
 ```
+
+--
+
+### Store
+
+```javascript
+import { createStore } from 'redux';
+import someReducer from './someReducer';
+
+const store = createStore(someReducer);
+```
+
+--
+
+### ディレクトリ一例
+
+* actions
+* components
+* reducers
 
 --
 

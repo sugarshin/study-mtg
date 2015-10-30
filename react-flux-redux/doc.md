@@ -535,8 +535,6 @@ render(<App />, document.getElementById('root'));
 // document.bodyを指定するとwarningでるようになった
 ```
 
---
-
 [http://codepen.io/sugarshin/pen/dYmZgN](http://codepen.io/sugarshin/pen/dYmZgN)
 
 [https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/todo](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/todo)
@@ -686,7 +684,7 @@ Facebook は「MVCはスケールしない」みたいに言ってるけど結�
 ```
 [View] DOMイベント等からアクションを呼ぶ ------> [ActionCreator] 適切なアクションを作ってStoreへ通知
                                                |
-ViewはStoreを監視しておいて変更があるとレンダリング      |
+ViewはStoreを監視しておいて変更があるとレンダリング   |
   |                                            |
   ----------------------------------------- [Store] 受け取ったアクションを元に自身を更新
 ```
@@ -854,6 +852,16 @@ class Counter extends Component {
 ```
 
 --
+
+View のカウントアップボタンクリック -> Action Creator を呼ぶ ->
+
+Action Creator は指定のイベントを emit して Store に通知 ->
+
+Store は通知を受け取って state を更新して、更新されたことを外部に通知 ->
+
+View は Store の更新通知を受け取って、 state を取得してそれを元にレンダリング
+
+**流れが一方向** View が直接 Store の state を更新したりしない
 
 [https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/flux](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/flux)
 

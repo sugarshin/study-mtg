@@ -38,6 +38,18 @@ Facebook 製のライブラリで MVC でいうところのビューの部分
 * よって覚える API や慣例も少ない
 * ほかのフレームワークのビュー部分を React で作るということも可能
 
+
+※ここでいう Component とは、 **見た目（css）と機能（JavaScript）を内包したHTMLの独自タグ** という解釈でとりあえずいいと思います
+
+フレームワークやライブラリや言語によって Component という言葉が指すものが違うと思いますが、Webフロントの Component というと W3C で策定中の Web Components 的なもの
+
+* Shadow DOM => DOMのカプセル化
+* Custom Elements => HTML独自タグ
+* HTML Imports => HTML用require的な
+* HTML Templates => 標準仕様HTMLテンプレート
+
+[https://github.com/w3c/webcomponents/](https://github.com/w3c/webcomponents/)
+
 --
 
 **VirtualDOM**
@@ -973,7 +985,7 @@ const initialState = {};
 // 初期stateは第1引数にデフォルト引数として渡す
 // 渡ってきたactionで現在のstateをどう変化させるか、またはさせないかを計算して
 // させる場合は新しくオブジェクトを作成して返す
-export default function someReducer(state = initialState, action) {
+export default function someReducer(state = initialState /* 現在のstate*/, action /*dispatchされて渡ってきたアクション*/) {
   switch (action.type) {
 
   case types.SOME_ACTION:
@@ -1008,6 +1020,16 @@ import { createStore } from 'redux';
 import someReducer from './someReducer';
 
 const store = createStore(someReducer);
+// storeオブジェクトは以下のメソッドをもつ
+// store.getState()
+  // Stateを取り出す
+
+// store.subscribe() @returens {Function} unsubscribe
+  // state変更時のlistenerを登録
+  // unsubscribeする関数が返る
+
+// store.dispatch()
+  // reducerにアクションを送る
 ```
 
 --

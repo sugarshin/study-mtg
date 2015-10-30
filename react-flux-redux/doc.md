@@ -310,6 +310,10 @@ export default function Footer(props) {
 Footer.propTypes = {
   copyright: PropTypes.string.isRequired
 };
+
+
+
+render(<Footer copyright="@sugarshin" />, document.getElementById('id'));
 ```
 
 ライフサイクルメソッドは利用できない
@@ -404,6 +408,7 @@ export default class AddTodo extends Component {
   handleClickButtonAdd() {
     this.props.onClickAdd(this.refs.input.value);
   }
+
 }
 ```
 
@@ -753,8 +758,8 @@ class EventEmitter {
     }
   }
 
-  emit(name, payload) {
-    this.events[name].forEach(listener => listener(payload));
+  emit(name, ...args) {
+    this.events[name].forEach(listener => listener(...args));
   }
 }
 
@@ -929,7 +934,7 @@ docs: [http://redux.js.org/](http://redux.js.org/)
 * `combineReducers`
   * 複数の`reducer`を結合して1つにする
 * `bindActionCreators`
-  * `react-redux` 利用時などなにかしらのview層でreducerに送るようにしてくれる (dispatch(someAction())みたいにしてくれる)
+  * `react-redux` 利用時などなにかしらのview層でreducerにアクションを送れるようにしてくれる (dispatch(someAction())みたいにしてくれる)
 * `applyMiddleware`
   * Middlewareの適用
 * `compose`
@@ -974,7 +979,7 @@ API叩くのもここ
 
 受け取ったアクションの `type` によってどう変化させるか計算して、
 変化させるなら必ず新しいオブジェクトの参照を返す
-これによって View に変更ｈが通知される
+これによって View に変更が通知される
 
 ```javascript
 // 必要なAction typeをimport
@@ -982,7 +987,7 @@ import * as types from './constants/ActionTypes';
 
 const initialState = {};
 
-// 初期stateは第1引数にデフォルト引数として渡す
+// 初期stateは第1引数にデフォルト引数として渡す（ES6）
 // 渡ってきたactionで現在のstateをどう変化させるか、またはさせないかを計算して
 // させる場合は新しくオブジェクトを作成して返す
 export default function someReducer(state = initialState /* 現在のstate*/, action /*dispatchされて渡ってきたアクション*/) {
@@ -1046,7 +1051,7 @@ const store = createStore(someReducer);
 
 Redux without React
 
-Conter
+Counter
 
 [https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/redux-without-react](https://github.com/sugarshin/study-mtg/tree/master/react-flux-redux/redux-without-react)
 

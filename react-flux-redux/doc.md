@@ -440,14 +440,14 @@ export default class TodoList extends Component {
   }
 
   renderTodos() {
-    const { onClickDelete, onClickCheckbox } = this.props;
-    return this.props.todos.map(todo => (
+    const { onClickDelete, onClickCheckbox, todos } = this.props;
+    return todos.map(todo => (
       // `key`属性に一意の値を渡す
       // 必須ではないけどwarningがでる、 diff/patch処理が遅くなる
       <Todo key={todo.id}
             onClickDelete={onClickDelete}
             onClickCheckbox={onClickCheckbox}
-            {...todo} />
+            { ...todo } />
     ));
   }
 
